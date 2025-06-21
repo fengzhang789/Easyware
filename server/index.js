@@ -3,6 +3,8 @@ const express = require('express')
 const cors = require('cors')
 const json5 = require('json5')
 const assert = require('assert')
+const fs = require('fs');
+const path = require('path');
 const app = express()
 const PORT = process.env.PORT || 3001;
 
@@ -36,17 +38,19 @@ COMPONENT_PROMPT = `
 `
 
 DIAGRAM_PROMPT = `
-You are an expert AI assistant for hardware prototyping. 
-Please generate a basic connection diagram in Markdown 
-or basic txt format. This will include the basic names 
-of all the components in the component list and how 
-they interact with each other. Please also provide 
-a JSON of these components - include their name, 
-the type of component, what it's used for and 
-its coordinates on the diagram relative to other 
-components. Structure your entire response with this 
-block. Do not include any other text or explanations 
-outside of these tags.
+  You are an expert AI assistant for hardware prototyping. 
+  Imagine you are creating a diagram that displays all 
+  the components and how they connect. This diagram will 
+  include the basic names of all the components in the 
+  component list and how they interact with each other. 
+  Now, using this information, please provide a JSON string (without special characters)
+  these components -include their name, 
+  the type of component, what it's used for and 
+  its coordinates on the diagram relative to other 
+  components. Structure your entire response with this 
+  block, do not actually generate the diagram, just the JSON. 
+  Do not include any other text or explanations 
+  outside of these tags.
 `
 
 app.use(cors())
@@ -136,6 +140,93 @@ app.post('/perplexity/components', async function (req, res) {
     res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
       response_id: response_id,
       prompt: COMPONENT_PROMPT,
+      status_code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      message: error.message
+    });
+  }
+});
+
+app.get('/perplexity/diagram/:id', function (req, res, next) {
+  const response_id = req.params.id;
+
+  if (response_id in memory_responses) {
+    const data = memory_responses[response_id];
+    let content;
+    assert("choices" in data, "Response is invalid. No choices found.");
+    
+    for (const choice of data.choices) {
+      assert("message" in choice, "Response is invalid. No message found.");
+      assert("content" in choice.message, "Response is invalid. No content found.");
+      assert("role" in choice.message && choice.message.role == "assistant", "Response is invalid. No role found or role is not 'assistant'.");
+
+      content = choice.message.content;
+      console.log(content);
+      break;
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({
+      response_id: response_id,
+      status_code: HTTP_STATUS.OK,
+      data: content
+    }, null, 2));
+  } else {
+    res.status(HTTP_STATUS.NOT_FOUND).json({
+      response_id: response_id,
+      status_code: HTTP_STATUS.NOT_FOUND,
+      data: {},
+    });
+  }
+});
+
+app.post('/perplexity/diagram', async function (req, res) {
+  const perplexityApiKey = process.env.PERPLEXITY_API_KEY;
+
+  if (!perplexityApiKey) {
+    return res.status(404).json({ 
+      error: 'Perplexity API key not found',
+      message: 'Please add PERPLEXITY_API_KEY to your .env file'
+    });
+  }
+
+  try {
+    const response = await fetch('https://api.perplexity.ai/chat/completions', {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'content-type': 'application/json',
+        'Authorization': `Bearer ${perplexityApiKey}`
+      },
+      body: JSON.stringify({
+        "model": "sonar-pro",
+        "messages": [ 
+          {
+            "role": "system",
+            "content": DIAGRAM_PROMPT
+          },
+          {
+            "role": "user",   
+            "content": "Can you help me build a bluetooth controlled door knob?"
+          }
+        ]
+      })
+    });
+
+    const data = await response.json();
+    memory_responses[data.id] = data;
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({
+      response_id: data.id,
+      status_code: HTTP_STATUS.OK,
+      prompt: DIAGRAM_PROMPT,
+      data: data
+    }, null, 2));
+
+  } catch (error) {
+    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+      response_id: response_id,
+      prompt: DIAGRAM_PROMPT,
       status_code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
       message: error.message
     });

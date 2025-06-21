@@ -1,0 +1,65 @@
+{
+  "response_id": "3f39a0a1-6fd8-401f-b3dd-534fcb64e9a4",
+  "status_code": 200,
+  "prompt": "\n  You are an expert AI assistant for hardware prototyping. \n  Imagine you are creating a diagram that displays all \n  the components and how they connect. This diagram will \n  include the basic names of all the components in the \n  component list and how they interact with each other. \n  Now, using this information, please provide a JSON string (without special characters)\n  these components -include their name, \n  the type of component, what it's used for and \n  its coordinates on the diagram relative to other \n  components. Structure your entire response with this \n  block, do not actually generate the diagram, just the JSON. \n  Do not include any other text or explanations \n  outside of these tags.\n",
+  "data": {
+    "id": "3f39a0a1-6fd8-401f-b3dd-534fcb64e9a4",
+    "model": "sonar-pro",
+    "created": 1750546739,
+    "usage": {
+      "prompt_tokens": 160,
+      "completion_tokens": 429,
+      "total_tokens": 589,
+      "search_context_size": "low"
+    },
+    "citations": [
+      "https://www.instructables.com/Bluetooth-Door-Lock-Arduino/",
+      "https://www.youtube.com/watch?v=Xoba1xibPJg",
+      "https://makezine.com/projects/ble-controlled-door-lock/",
+      "https://www.instructables.com/Easy-Bluetooth-Enabled-Door-Lock-With-Arduino-An/",
+      "https://www.youtube.com/watch?v=bAcK80fm1_0"
+    ],
+    "search_results": [
+      {
+        "title": "Bluetooth Door Lock (Arduino) : 10 Steps (with Pictures) - Instructables",
+        "url": "https://www.instructables.com/Bluetooth-Door-Lock-Arduino/",
+        "date": null
+      },
+      {
+        "title": "Build Your Own Bluetooth Door Lock with Arduino and HC05 Module",
+        "url": "https://www.youtube.com/watch?v=Xoba1xibPJg",
+        "date": "2022-02-13"
+      },
+      {
+        "title": "Open Source Bluetooth Door Lock - Make Magazine",
+        "url": "https://makezine.com/projects/ble-controlled-door-lock/",
+        "date": "2014-09-15"
+      },
+      {
+        "title": "Easy Bluetooth Enabled Door Lock With Arduino + Android",
+        "url": "https://www.instructables.com/Easy-Bluetooth-Enabled-Door-Lock-With-Arduino-An/",
+        "date": null
+      },
+      {
+        "title": "How to Make a Smartphone Connected Door Lock - YouTube",
+        "url": "https://www.youtube.com/watch?v=bAcK80fm1_0",
+        "date": "2017-01-17"
+      }
+    ],
+    "object": "chat.completion",
+    "choices": [
+      {
+        "index": 0,
+        "finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"components\": [\n    {\n      \"name\": \"Bluetooth Module (HC-05)\",\n      \"type\": \"Wireless Communication\",\n      \"purpose\": \"Receives lock/unlock commands from a smartphone via Bluetooth\",\n      \"coordinates\": {\"x\": 0, \"y\": 0},\n      \"connections\": [\"Arduino Microcontroller\"]\n    },\n    {\n      \"name\": \"Arduino Nano or Uno\",\n      \"type\": \"Microcontroller\",\n      \"purpose\": \"Processes Bluetooth commands and controls the servo or electronic lock\",\n      \"coordinates\": {\"x\": 2, \"y\": 0},\n      \"connections\": [\"Bluetooth Module (HC-05)\", \"Servo Motor\", \"LED Indicators\", \"Power Supply\"]\n    },\n    {\n      \"name\": \"Servo Motor\",\n      \"type\": \"Actuator\",\n      \"purpose\": \"Physically rotates or pushes the door knob mechanism to lock or unlock\",\n      \"coordinates\": {\"x\": 4, \"y\": 0},\n      \"connections\": [\"Arduino Microcontroller\", \"Door Knob Mechanism\"]\n    },\n    {\n      \"name\": \"Door Knob Mechanism\",\n      \"type\": \"Mechanical Interface\",\n      \"purpose\": \"Actual locking hardware; is operated by the servo motor\",\n      \"coordinates\": {\"x\": 6, \"y\": 0},\n      \"connections\": [\"Servo Motor\"]\n    },\n    {\n      \"name\": \"Power Supply (Battery or USB)\",\n      \"type\": \"Power Source\",\n      \"purpose\": \"Provides power to Arduino, Bluetooth module, and servo\",\n      \"coordinates\": {\"x\": 2, \"y\": 2},\n      \"connections\": [\"Arduino Microcontroller\"]\n    },\n    {\n      \"name\": \"LED Indicators (Red/Green)\",\n      \"type\": \"Status Indicator\",\n      \"purpose\": \"Provides visual feedback for lock (red) and unlock (green) states\",\n      \"coordinates\": {\"x\": 2, \"y\": -2},\n      \"connections\": [\"Arduino Microcontroller\"]\n    }\n  ]\n}"
+        },
+        "delta": {
+          "role": "assistant",
+          "content": ""
+        }
+      }
+    ]
+  }
+}

@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express')
 const cors = require('cors')
+const json5 = require('json5')
 const assert = require('assert')
 const app = express()
 const PORT = process.env.PORT || 3001;
@@ -8,7 +9,8 @@ const PORT = process.env.PORT || 3001;
 const HTTP_STATUS = {
   OK: 200,
   BAD_REQUEST: 400,
-  INTERNAL_SERVER_ERROR: 500
+  INTERNAL_SERVER_ERROR: 500,
+  NOT_FOUND: 404
 }
   
 memory_responses = {}
@@ -18,14 +20,16 @@ COMPONENT_PROMPT = `
   Your task is to take a user's idea and generate all the 
   necessary information to build it. Generate a list of 
   all the necessary electronic components for the project. 
-  Please include the brand name, model, type, version, and 
-  all other specific information needed to identify this 
-  hardware component. (i.e. Arduino Mini Nano V3.0 ATmega328P). 
+   If there are two possible hardware components, 
+  please list ONE. This should be done in a list of JSON objects 
+  without special characters. Please also format the JSON in a 
+  way that is easy to parse. Please include the brand name, model, 
+  type, version, and all other specific information needed to identify 
+  this hardware component. (i.e. Arduino Mini Nano V3.0 ATmega328P). 
   Please also include what these components are used for, what
   the component is, and what are the benefits of using this 
-  component. If there are two possible hardware components, 
-  please list ONE. This should be done in Markdown format.
-  Structure your entire response with this block. Do not 
+  component. Structure your entire response with this block. 
+  Do not include any special characters in the JSON. Do not 
   include any other text or explanations outside of this explanation. 
   Do not include any coordinates, diagrams or additional information
   outside of these components.
@@ -57,25 +61,24 @@ app.get('/perplexity/components/:id', function (req, res, next) {
 
   if (response_id in memory_responses) {
     const data = memory_responses[response_id];
-    let content = "";
+    let content;
     assert("choices" in data, "Response is invalid. No choices found.");
     
     for (const choice of data.choices) {
       assert("message" in choice, "Response is invalid. No message found.");
       assert("content" in choice.message, "Response is invalid. No content found.");
       assert("role" in choice.message && choice.message.role == "assistant", "Response is invalid. No role found or role is not 'assistant'.");
-      
+
       content = choice.message.content;
       break;
     }
 
-    res.json(
-      {
-        response_id: response_id,
-        status_code: HTTP_STATUS.OK,
-        data: content
-      }
-    );
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({
+      response_id: response_id,
+      status_code: HTTP_STATUS.OK,
+      data: content
+    }, null, 2));
   } else {
     res.status(HTTP_STATUS.NOT_FOUND).json({
       response_id: response_id,

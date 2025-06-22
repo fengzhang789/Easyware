@@ -49,14 +49,14 @@ export default function Component() {
 
         {/* Decorative elements - larger and cut off by corners */}
         <div className="absolute -bottom-[5rem] -left-[5rem] opacity-20 animate-fade-in-left animate-delay-1000">
-          <img src="/images/hammer-icon.png" alt="Hammer tool illustration" className="w-[20rem] h-[20rem] object-contain" />
+          <img src="/images/hammer-icon.png" alt="Hammer tool illustration" className="w-[20rem] h-[20rem] object-contain opacity-[0.5]" />
         </div>
 
         <div className="absolute -bottom-[5rem] -right-[5rem] opacity-20 animate-fade-in-right animate-delay-1000">
           <img
             src="/images/wrench-icon.png"
             alt="Wrench tool illustration"
-            className="w-[20rem] h-[20rem] object-contain transform scale-x-[-1]"
+            className="w-[20rem] h-[20rem] object-contain transform scale-x-[-1] opacity-[0.5]"
           />
         </div>
       </div>

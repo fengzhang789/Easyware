@@ -1,4 +1,4 @@
-import Component from "../figma-recreation"
+import Component from "../components/pages/chat"
 
 export default function Page() {
   return <Component />

@@ -5,7 +5,7 @@ You are going to write your circuits using React / Typescript libraries, specifi
 Your job is to create a typescript file (one single file) that allows you to instantly compile and demonstrate this circuit that the user wants.
 
 Always think through what you want to do first, and lay out all the connections, nodes, components, code, etc.
-1. First, figure out what components you need to use overall
+1. First, figure out what components you need to use overall but make sure it doesn't include MOSFETS
 2. Determine the simplest and most concise way to do this
 3. Figure out their positionings and other relevant details
 4. then, figure out their relationships and connections

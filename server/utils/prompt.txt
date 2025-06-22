@@ -6,7 +6,7 @@ Your job is to create a typescript file (one single file) that allows you to ins
 
 Always think through what you want to do first, and lay out all the connections, nodes, components, code, etc.
 1. First, make sure you understand what components the users want to use. They inputted it as a message in a list of JSON objects. There is a lot of extra information. You only need to be concerned about what type of component it is (i.e. led, diode) to generate the diagram.
-2. Determine the simplest and most concise way to do this
+2. Determine the simplest and most concise way to do this.
 3. Figure out their positionings and other relevant details
 4. then, figure out their relationships and connections
 5. finally, determine the edges to connect and wire the prototype
@@ -15,6 +15,16 @@ After it is all thought through, generate the circuit code with tscircuit.
 
 Here is the documentation for tscircuit that you must follow to create this react tsx file, which will then be instantly compiled.
 
+**CRITICAL ROUTING GUIDELINES TO PREVENT ERRORS:**
+- Always use `autorouter="sequential-trace"` for simple, reliable routing
+- Define power nets first: `<net name="V5" />`, `<net name="GND" />`, `<net name="V3_3" />`
+- Connect power pins to nets instead of individual traces: `<trace from=".U1 > .V5" to="net.V5" />`
+- Space components at least 10-20mm apart on PCB to avoid routing conflicts
+- Use `maxLength` constraints on traces: `<trace from=".U1 > .D2" to=".U2 > .DATA" maxLength="50mm" />`
+- Keep schematic components spaced 3-8 units apart to prevent overlapping
+- Avoid creating complex routing patterns that could cause infinite loops
+- Use simple, direct connections rather than complex routing paths
+- If you have more than 20 traces, consider using subcircuits to break up complexity
 
 # tscircuit Coder's Reference
 
@@ -533,6 +543,12 @@ export default () => (
 `<transistor />` is a generic three-terminal device. `<mosfet />` is a specific type.
 
 **Transistor Example**
+
+Required Properties: 
+- name: str
+- channel: str 
+- footprint: str
+
 ```tsx
 export default () => (
   <transistor
@@ -543,7 +559,15 @@ export default () => (
 )
 ```
 
+
 **MOSFET Example**
+
+Required Properties: 
+- name: str
+- channel: str 
+- footprint: str
+- mosfetMode: str
+
 ```tsx
 export default () => (
   <mosfet
@@ -559,10 +583,16 @@ export default () => (
 
 Provide stable clock signals.
 
+Required Properties:
+- name: str 
+- frequency: str
+- loadCapacitance: str
+- footprint: str
+
 **Crystal Example**
 ```tsx
 export default () => (
-  <board width="50mm" height="50mm">
+  <board width="60mm" height="50mm">
     <crystal
       name="XT1"
       frequency="16MHz"
@@ -615,11 +645,26 @@ export default () => (
 
 A male or female pin header.
 
+Required:
+- name: str
+- pinCount: int
+- footprint: str
+- gender: str
+- pitch: str
+- doubleRow: boolean 
+- showSilkscreenPinLabels: boolean
+- pinLabels: list 
+- x: int 
+- y: int
+
+**NOTE**: FOOTPRINT IS NEEDED FOR PINHEADER. It can be "pinrow2", "pinrow3", "pinrow4" or "pinrow8" depending on the pinCount value. The number after "pinrow" should be equal to the pinCount value.
+
 ```tsx
 export default () => (
   <pinheader
     name="J1"
     pinCount={8}
+    footprint="pinrow8"
     gender="male"
     pitch="2.54mm"
     doubleRow={true}
@@ -636,6 +681,11 @@ export default () => (
 Jumpers for making or breaking connections. Solder jumpers are pads on the PCB that can be bridged with solder.
 
 **Jumper Example**
+
+Required Properties: 
+- name: str
+- footprint: str
+
 ```tsx
 export default () => (
   <board width="10mm" height="10mm">
@@ -775,7 +825,7 @@ export default () => (
     {gridCells.map((cell) => (
       <led
         name={`LED${cell.index}`}
-        footprint="led_0402"
+        footprint="0402"
         pcbX={cell.center.x}
         pcbY={cell.center.y}
       />
@@ -926,4 +976,13 @@ export default () => (
 
 which runs correctly.
 
+RULES YOU MUST FOLLOW:
+- NEVER start pinLabels with numbers
+- NEVER start name properties with numbers 
+- ALWAYS include schX and schY properties for each component with a minimum of -5 and maximum of 10
+- nets: USE NETS FOR POWER DISTRIBUTION TO AVOID ROUTING CONFLICTS
+- traces: ADD maxLength CONSTRAINTS TO PREVENT INFINITE LOOPS
+- footprints: NEVER make up your own footprint. Only use the footprint values provided in the code examples.
+
+DO NOT HALLUCINATE AND CREATE CONNECTIONS BETWEEN COMPONENTS THAT DO NOT EXIST. MAKE SURE TO FOLLOW RULES
 THINK THROUGH EVERYTHING. THINK LONG AND HARD. ONLY OUTPUT THE CODE, DO NOT PROVIDE ADDITIONAL INFORMATION ABOUT WHICH COMPONENTS, YOUR THOUGHTS, WHAT THEIR USES FOR, ETC.

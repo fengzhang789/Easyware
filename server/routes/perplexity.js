@@ -101,7 +101,7 @@ router.post('/components', async function (req, res) {
           },
           {
             "role": "user",
-            "content": "Build a smart plan monitoring system?"
+            "content": "Build a temperature and humidity sensor"
           }
         ]
       })

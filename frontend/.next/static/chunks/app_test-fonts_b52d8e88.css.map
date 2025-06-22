@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/app/test-fonts.css"],"sourcesContent":["@font-face {\n  font-family: \"CrimsonText\";\n  src: url(\"/fonts/CrimsonText-Regular.ttf\") format(\"truetype\");\n  font-weight: normal;\n  font-style: normal;\n  font-display: swap;\n}\n\n@font-face {\n  font-family: \"CrimsonText-Italic\";\n  src: url(\"/fonts/CrimsonText-Italic.ttf\") format(\"truetype\");\n  font-weight: normal;\n  font-style: italic;\n  font-display: swap;\n}\n\n.test-crimson {\n  font-family: \"CrimsonText\", serif !important;\n}\n\n.test-crimson-italic {\n  font-family: \"CrimsonText-Italic\", serif !important;\n} "],"names":[],"mappings":"AAAA;;;;;;;;AAQA;;;;;;;;AAQA;;;;AAIA"}}]
-}

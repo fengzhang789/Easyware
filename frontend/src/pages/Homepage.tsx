@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "./ui/button"
+import { Button } from "../components/ui/button"
 import { Send } from "lucide-react"
 
 export default function Homepage() {

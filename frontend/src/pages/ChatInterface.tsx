@@ -176,60 +176,8 @@ function ChatInterfaceContent() {
   const initialPrompt = searchParams.get('prompt')
   
   const [circuitBoard, setCircuitBoard] = useState<string>(`<board></board>`)
-  const [code, setCode] = useState(`// Arduino Firmware for tscircuit
-#include <Arduino.h>
-
-void setup() {
-  Serial.begin(9600);
-  pinMode(LED_BUILTIN, OUTPUT);
-  Serial.println("Circuit initialized");
-}
-
-void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);
-  delay(1000);
-  digitalWrite(LED_BUILTIN, LOW);
-  delay(1000);
-  
-  Serial.println("LED blink cycle complete");
-}`)
-  const [bomItems, setBomItems] = useState<BOMItem[]>([
-    {
-      id: "1",
-      component: "Arduino Uno R3",
-      quantity: 1,
-      unitPrice: 25.0,
-      link: "https://store.arduino.cc/products/arduino-uno-rev3",
-    },
-    {
-      id: "2",
-      component: "LED (Red)",
-      quantity: 5,
-      unitPrice: 0.25,
-      link: "https://www.digikey.com/en/products/detail/kingbright/WP7113ID/1747663",
-    },
-    {
-      id: "3",
-      component: "Resistor 220Ω",
-      quantity: 5,
-      unitPrice: 0.1,
-      link: "https://www.mouser.com/ProductDetail/YAGEO/CFR-25JB-52-220R",
-    },
-    {
-      id: "4",
-      component: "Breadboard",
-      quantity: 1,
-      unitPrice: 5.5,
-      link: "https://www.adafruit.com/product/64",
-    },
-    {
-      id: "5",
-      component: "LM35 Temperature Sensor",
-      quantity: 1,
-      unitPrice: 3.2,
-      link: "https://www.sparkfun.com/products/10988",
-    },
-  ])
+  const [code, setCode] = useState(`// Arduino Firmware for tscircuit`)
+  const [bomItems, setBomItems] = useState<BOMItem[]>([])
   const [componentsData, setComponentsData] = useState<any>(null)
   
   // Debug circuit board changes
@@ -277,6 +225,7 @@ void loop() {
       component: <ChatPanel 
         setCircuit={setCircuitBoard} 
         setComponentsData={setComponentsData}
+        setCode={setCode}
         initialPrompt={initialPrompt} 
       />,
       position: panelPositions.chat,

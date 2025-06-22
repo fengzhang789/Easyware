@@ -1,16 +1,40 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Package, Plus, Trash2, Download, ExternalLink } from "lucide-react"
-import type { BOMItem } from "@/types"
+import { Button } from "./ui/button"
+import { ScrollArea, ScrollBar } from "./ui/scroll-area"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
+import { Package, Trash2, Download, ExternalLink } from "lucide-react"
+import type { BOMItem } from "../types"
 
 export function BOMTable({ bomItems, onBomChange }: { bomItems: BOMItem[]; onBomChange: (items: BOMItem[]) => void }) {
   const totalCost = bomItems.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0)
 
   const handleDeleteItem = (id: string) => {
     onBomChange(bomItems.filter((item) => item.id !== id))
+  }
+
+  const handleExport = () => {
+    const headers = ["Component", "Quantity", "Unit Price", "Total", "Link"]
+    const rows = bomItems.map((item) =>
+      [
+        `"${item.component.replace(/"/g, '""')}"`, // Handle quotes in component name
+        item.quantity,
+        item.unitPrice.toFixed(2),
+        (item.quantity * item.unitPrice).toFixed(2),
+        item.link,
+      ].join(",")
+    )
+
+    const csvContent = [headers.join(","), ...rows].join("\n")
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement("a")
+    link.setAttribute("href", url)
+    link.setAttribute("download", "bill-of-materials.csv")
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
   }
 
   const openLink = (url: string) => {
@@ -26,11 +50,7 @@ export function BOMTable({ bomItems, onBomChange }: { bomItems: BOMItem[]; onBom
             <h3 className="font-cormorant text-xl font-semibold text-charcoal">Bill of Materials</h3>
           </div>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" className="bg-white text-charcoal border-charcoal/20">
-              <Plus className="w-4 h-4 mr-1" />
-              Add Item
-            </Button>
-            <Button size="sm" className="bg-charcoal hover:bg-charcoal/80 text-cream">
+            <Button size="sm" className="bg-white hover:bg-accent cursor-pointer text-cream" onClick={handleExport}>
               <Download className="w-4 h-4 mr-1" />
               Export
             </Button>
@@ -46,11 +66,9 @@ export function BOMTable({ bomItems, onBomChange }: { bomItems: BOMItem[]; onBom
                 <TableHeader>
                   <TableRow>
                     <TableHead className="font-cormorant font-semibold">Component</TableHead>
-                    <TableHead className="font-cormorant font-semibold">Description</TableHead>
                     <TableHead className="font-cormorant font-semibold">Qty</TableHead>
                     <TableHead className="font-cormorant font-semibold">Unit Price</TableHead>
                     <TableHead className="font-cormorant font-semibold">Total</TableHead>
-                    <TableHead className="font-cormorant font-semibold">Supplier</TableHead>
                     <TableHead className="font-cormorant font-semibold">Links</TableHead>
                     <TableHead className="w-12"></TableHead>
                   </TableRow>

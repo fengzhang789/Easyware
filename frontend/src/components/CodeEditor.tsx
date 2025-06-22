@@ -1,5 +1,5 @@
 "use client"
-import { Button } from "@/components/ui/button"
+import { Button } from "./ui/button"
 import { Code, Download } from "lucide-react"
 import Editor from "@monaco-editor/react"
 

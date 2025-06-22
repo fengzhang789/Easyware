@@ -29,10 +29,12 @@ const CIRCUIT_SUGGESTIONS = [
 export function ChatPanel({
   setCircuit,
   setComponentsData,
+  setCode,
   initialPrompt,
 }: {
   setCircuit: (circuit: string) => void
   setComponentsData: (data: Record<string, unknown>) => void
+  setCode: (code: string) => void
   initialPrompt?: string | null
 }) {
   const [messages, setMessages] = useState<Message[]>([])
@@ -96,13 +98,24 @@ export function ChatPanel({
           message: messageToSend,
         }),
       })
+      const codeResponse = fetch(`${BACKEND_URL}/letta/code`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: messageToSend,
+        }),
+      })
 
-      const [componentsData, reactComponentsData] = await Promise.all([componentsResponse, reactComponentsResponse])
+      const [componentsData, reactComponentsData, codeData] = await Promise.all([componentsResponse, reactComponentsResponse, codeResponse])
 
       // Parse the JSON responses
       const componentsResult = await componentsData.json()
       const diagramsResult = await reactComponentsData.json()
+      const codeResult = await codeData.json()
 
+      console.log('Code result:', codeResult)
       console.log('Raw diagrams result:', diagramsResult)
       console.log('Diagrams data:', diagramsResult.data)
 
@@ -121,6 +134,7 @@ export function ChatPanel({
         
         setCircuit(cleaned)
         setComponentsData(componentsResult)
+        setCode(codeResult.data.messages[codeResult.data.messages.length - 1].content)
         console.log(componentsResult)
       } else {
         console.error('Diagrams request failed or no data:', reactComponentsData.status, diagramsResult)
@@ -291,13 +305,9 @@ export function ChatPanel({
           {isGenerating && (
             <div className="flex justify-start">
               <div className="bg-white text-charcoal border border-charcoal/20 p-3 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center space-x-1">
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-charcoal [animation-delay:-0.3s]"></div>
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-charcoal [animation-delay:-0.15s]"></div>
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-charcoal"></div>
-                  </div>
-                  <span className="text-sm">Generating circuit design...</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-solid border-charcoal border-t-transparent rounded-full animate-spin"></div>
+                  <span className="text-sm font-crimson">Generating...</span>
                 </div>
               </div>
             </div>

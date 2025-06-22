@@ -47,16 +47,6 @@ router.post('/chat', async function (req, res) {
 
         console.log('✅ Response received');
 
-        // Save response to file (optional)
-        const lettaDir = path.join(__dirname, '../letta');
-        if (!fs.existsSync(lettaDir)) {
-            fs.mkdirSync(lettaDir, { recursive: true });
-        }
-        fs.writeFileSync(
-            path.join(lettaDir, 'response.json'), 
-            JSON.stringify(response, null, 2)
-        );
-
         return res.json({
             success: true,
             data: response,
@@ -170,7 +160,7 @@ router.post('/stream', async function (req, res) {
     }
 });
 
-router.post('code', async function (req, res) {
+router.post('/code', async function (req, res) {
     const { message, agentId = "agent-08e0c1e8-ea7b-44ac-8e36-f32905b8349a" } = req.body;
 
     if (!process.env.LETTA_API_KEY) {
@@ -205,16 +195,6 @@ router.post('code', async function (req, res) {
         );
 
         console.log('✅ Response received for code');
-
-        // Save response to file (optional)
-        const lettaDir = path.join(__dirname, '../letta');
-        if (!fs.existsSync(lettaDir)) {
-            fs.mkdirSync(lettaDir, { recursive: true });
-        }
-        fs.writeFileSync(
-            path.join(lettaDir, 'response.json'), 
-            JSON.stringify(response, null, 2)
-        );
 
         return res.json({
             success: true,

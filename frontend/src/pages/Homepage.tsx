@@ -63,11 +63,11 @@ export default function Homepage() {
           
           {/* Enhanced search input */}
           <div className="relative w-[40rem] max-w-4xl mx-auto group animate-fade-in" style={{ animationDelay: '1.1s' }}>
-            <div className="flex items-center bg-[#F5F1ED]/10 backdrop-blur-md border border-[#F5F1ED]/30 rounded-3xl px-[1rem] py-[1rem] focus-within:ring-2 focus-within:ring-[#F5F1ED]/20 focus-within:border-[#F5F1ED]/50 focus-within:shadow-lg focus-within:shadow-[#F5F1ED]/10 transition-all duration-300">
+            <div className="flex items-center bg-[#F5F1ED]/10 backdrop-blur-md border border-[#F5F1ED]/30 rounded-3xl px-[1.5rem] py-[1rem] focus-within:ring-2 focus-within:ring-[#F5F1ED]/20 focus-within:border-[#F5F1ED]/50 focus-within:shadow-lg focus-within:shadow-[#F5F1ED]/10 transition-all duration-300">
               <textarea
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Help me build a bluetooth doorknob..."
+                placeholder="Help me build a bluetooth door lock..."
                 className="flex-1 bg-transparent text-[#F5F1ED] placeholder:text-[#F5F1ED]/60 placeholder:font-crimson-italic font-light text-base resize-none outline-none border-none focus:ring-0 font-crimson-italic italic"
                 rows={1}
                 onKeyPress={handleKeyPress}

@@ -46,9 +46,9 @@ void loop() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Code className="w-5 h-5 text-charcoal" />
-            <h3 className="font-cormorant text-xl font-semibold text-charcoal">Arduino IDE</h3>
+            <h3 className="font-cormorant text-xl font-semibold text-charcoal font-cormorant ">Arduino IDE</h3>
           </div>
-          <Button onClick={handleExport} size="sm" className="bg-charcoal hover:bg-charcoal/80 text-cream">
+          <Button onClick={handleExport} size="sm" className="bg-charcoal hover:bg-charcoal/80 text-cream hover:bg-accent hover:cursor-pointer active:bg-gray-200 font-crimson">
             <Download className="w-4 h-4 mr-1" />
             Export .ino
           </Button>

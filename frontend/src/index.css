@@ -3,7 +3,7 @@
 
 @font-face {
   font-family: "CrimsonText";
-  src: url("/fonts/CrimsonText-Regular.ttf") format("truetype");
+  src: url("./assets/fonts/CrimsonText-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -11,7 +11,7 @@
 
 @font-face {
   font-family: "CrimsonText-Italic";
-  src: url("/fonts/CrimsonText-Italic.ttf") format("truetype");
+  src: url("./assets/fonts/CrimsonText-Italic.ttf") format("truetype");
   font-weight: normal;
   font-style: italic;
   font-display: swap;
@@ -19,7 +19,7 @@
 
 @font-face {
   font-family: "CormorantGaramond-Italic";
-  src: url("/fonts/CormorantGaramond-Italic.ttf") format("truetype");
+  src: url("./assets/fonts/CormorantGaramond-Italic-VariableFont_wght.ttf") format("truetype");
   font-weight: normal;
   font-style: italic;
   font-display: swap;
@@ -27,7 +27,7 @@
 
 @font-face {
   font-family: "CormorantGaramond-Regular";
-  src: url("/fonts/CormorantGaramond-Regular.ttf") format("truetype");
+  src: url("./assets/fonts/CormorantGaramond-VariableFont_wght.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -45,7 +45,7 @@
   font-family: "CormorantGaramond-Italic", "Times New Roman", serif !important;
 }
 
-.font-cormorant-regular {
+.font-cormorant {
   font-family: "CormorantGaramond-Regular", "Times New Roman", serif !important;
 }
 

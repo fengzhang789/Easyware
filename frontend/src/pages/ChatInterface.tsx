@@ -1,8 +1,6 @@
 "use client"
 
-import type React from "react"
-
-import { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { useSearchParams } from "react-router-dom"
 import { ChatPanel } from "../components/ChatPanel"
 import { CodeEditor } from "../components/CodeEditor"
@@ -48,27 +46,28 @@ function DropZone({
   className: string
   label: string
 }) {
+  const dropRef = useRef<HTMLDivElement>(null)
   const [{ isOver }, drop] = useDrop({
     accept: "panel",
-    drop: (item: DragItem) => {
-      onDrop(item.id, position)
-    },
+    drop: (item: DragItem) => onDrop(item.id, position),
     collect: (monitor) => ({
       isOver: monitor.isOver(),
     }),
   })
 
+  drop(dropRef)
+
   if (!isVisible) return null
 
   return (
     <div
-      ref={drop}
-      className={`absolute z-50 transition-all duration-200 ${
+      ref={dropRef}
+      className={`absolute z-50 transition-all duration-200 font-crimson ${
         isOver ? "bg-blue-500/40 border-2 border-blue-500" : "bg-blue-500/20 border-2 border-blue-400 border-dashed"
       } ${className}`}
     >
       <div className="flex items-center justify-center h-full">
-        <div className="bg-white/90 px-3 py-1 rounded-md text-sm font-medium text-charcoal shadow-lg">{label}</div>
+        <div className="bg-white/90 px-3 py-1 rounded-md text-sm font-medium text-charcoal shadow-lg font-crimson">{label}</div>
       </div>
     </div>
   )
@@ -83,6 +82,7 @@ function DraggableTab({
   onMove: (id: string, position: PanelPosition) => void
   onSetDragging: (isDragging: boolean) => void
 }) {
+  const dragRef = useRef<HTMLButtonElement>(null)
   const [{ isDragging }, drag] = useDrag({
     type: "panel",
     item: { id: panel.id, type: "panel" },
@@ -90,6 +90,8 @@ function DraggableTab({
       isDragging: monitor.isDragging(),
     }),
   })
+
+  drag(dragRef)
 
   useEffect(() => {
     onSetDragging(isDragging)
@@ -105,16 +107,16 @@ function DraggableTab({
 
   return (
     <Button
-      ref={drag}
+      ref={dragRef}
       variant="ghost"
       size="sm"
       onClick={togglePanel}
-      className={`text-cream hover:bg-cream/10 cursor-move ${
+      className={`flex items-center text-cream hover:bg-gray-200 hover:text-charcoal cursor-move ${
         panel.position !== "hidden" ? "bg-cream/20" : ""
       } ${isDragging ? "opacity-50" : ""}`}
     >
       {panel.icon}
-      <span className="ml-2 capitalize">{panel.title}</span>
+      <span className="ml-2 text-base font-crimson">{panel.title}</span>
       <GripVertical className="w-3 h-3 ml-1 opacity-50" />
     </Button>
   )
@@ -134,7 +136,7 @@ function PanelTabs({
   if (panels.length <= 1) return null
 
   return (
-    <div className="flex border-b border-charcoal/20 bg-cream">
+    <div className="flex border-b border-charcoal/20 bg-cream font-crimson">
       {panels.map((panel) => (
         <div
           key={panel.id}
@@ -144,7 +146,7 @@ function PanelTabs({
           onClick={() => onSetActive(panel.id)}
         >
           {panel.icon}
-          <span className="ml-2 text-sm capitalize">{panel.title}</span>
+          <span className="ml-2 text-base font-crimson">{panel.title}</span>
           <button
             onClick={(e) => {
               e.stopPropagation()
@@ -285,40 +287,40 @@ function ChatInterfaceContent() {
         position="left"
         onDrop={movePanel}
         isVisible={isDragging}
-        className="top-16 left-0 w-1/4 h-[calc(100vh-4rem)]"
+        className="top-16 left-0 w-1/4 h-[calc(100vh-4rem)] font-crimson"
         label="Left Panel"
       />
       <DropZone
         position="right"
         onDrop={movePanel}
         isVisible={isDragging}
-        className="top-16 right-0 w-1/4 h-[calc(100vh-4rem)]"
+        className="top-16 right-0 w-1/4 h-[calc(100vh-4rem)] font-crimson"
         label="Right Panel"
       />
       <DropZone
         position="bottom"
         onDrop={movePanel}
         isVisible={isDragging}
-        className="bottom-0 left-1/4 w-1/2 h-1/3"
+        className="bottom-0 left-1/4 w-1/2 h-1/3 font-crimson"
         label="Bottom Panel"
       />
       <DropZone
         position="center"
         onDrop={movePanel}
         isVisible={isDragging}
-        className="top-16 left-1/4 w-1/2 h-1/3"
+        className="top-16 left-1/4 w-1/2 h-1/3 font-crimson"
         label="Center Tabs"
       />
 
       {/* Header */}
-      <header className="h-16 bg-charcoal text-cream px-6 flex items-center border-b border-charcoal/20 relative z-50">
-        <Button variant="ghost" size="sm" onClick={handleGoHome} className="text-cream hover:bg-cream/10 mr-4">
-          <HomeIcon className="w-4 h-4 mr-2" />
+      <header className="h-16 bg-charcoal text-cream px-6 flex items-center border-b border-charcoal/20 relative z-50 font-crimson">
+        <Button variant="ghost" size="sm" onClick={handleGoHome} className="text-cream hover:bg-accent hover:cursor-pointer active:bg-gray-200 mr-4 font-crimson">
+          <HomeIcon className="w-4 h-4" />
         </Button>
-        <h1 className="font-cormorant text-2xl font-bold mr-8">Circuit Studio</h1>
+        <h1 className="font-cormorant text-2xl font-bold mr-8 font-cormorant-italic bold">Circuit Studio</h1>
 
         {/* Draggable Panel Tabs */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 font-crimson">
           {panels.map((panel) => (
             <DraggableTab key={panel.id} panel={panel} onMove={movePanel} onSetDragging={setIsDragging} />
           ))}
@@ -326,7 +328,7 @@ function ChatInterfaceContent() {
       </header>
 
       {/* Main Content Area */}
-      <div className="h-[calc(100vh-4rem)]">
+      <div className="h-[calc(100vh-4rem)] font-crimson">
         <ResizablePanelGroup direction="vertical" className="h-full">
           {/* Top Section */}
           <ResizablePanel defaultSize={bottomPanels.length > 0 ? 70 : 100}>

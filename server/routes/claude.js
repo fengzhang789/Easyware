@@ -7,7 +7,7 @@ const Anthropic = require('@anthropic-ai/sdk');
 const { HTTP_STATUS } = require('./perplexity');
 
 const router = express.Router()
-const systemPrompt = fs.readFileSync(path.join(__dirname, '../utils/prompt_1.txt'), 'utf8');
+const systemPrompt = fs.readFileSync(path.join(__dirname, '../utils/prompt.txt'), 'utf8');
 
 router.post('/diagrams', async function (req, res) {
     const claude_api_key = process.env.CLAUDE_OPUS_API_KEY;

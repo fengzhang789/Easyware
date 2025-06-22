@@ -101,7 +101,7 @@ router.post('/components', async function (req, res) {
           },
           {
             "role": "user",
-            "content": "Can you help me build a bluetooth controlled door knob?"
+            "content": "Build a smart plan monitoring system?"
           }
         ]
       })

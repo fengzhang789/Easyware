@@ -1,7 +1,0 @@
-{
-  "response_id": "9b8916ba-a0ec-4cb7-af62-9ff004e7e03a",
-  "status_code": 200,
-  "prompt": "\n  You are an expert AI assistant for hardware prototyping. \n  Imagine you are creating a diagram that displays all \n  the components and how they connect. This diagram will \n  include the basic names of all the components in the \n  component list and how they interact with each other. \n  Now, using this information, please provide a JSON string (without special characters)\n  these components -include their name, \n  the type of component, what it's used for and \n  its coordinates on the diagram relative to other \n  components. Structure your entire response with this \n  block, do not actually generate the diagram, just the JSON. \n  Do not include any other text or explanations \n  outside of these tags.\n",
-  "file": "diagram_9b8916ba-a0ec-4cb7-af62-9ff004e7e03a.txt",
-  "message": "Diagram saved as .txt file"
-}

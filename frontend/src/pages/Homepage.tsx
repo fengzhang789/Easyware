@@ -78,7 +78,7 @@ export default function Homepage() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Help me build a bluetooth doorknob..."
-                className="flex-1 bg-transparent text-[#F5F1ED] placeholder:text-[#F5F1ED]/60 font-light text-lg resize-none outline-none border-none focus:ring-0"
+                className="flex-1 bg-transparent text-[#F5F1ED] placeholder:text-[#F5F1ED]/60 placeholder:font-crimson-italic font-light text-base resize-none outline-none border-none focus:ring-0 font-crimson-italic italic"
                 rows={1}
                 onKeyPress={handleKeyPress}
                 onInput={(e) => {
@@ -92,7 +92,7 @@ export default function Homepage() {
                 size="icon"
                 onClick={handleSend}
                 disabled={!inputValue.trim()}
-                className="bg-[#F5F1ED] hover:bg-[#F5F1ED]/90 text-[#272727] rounded-full w-14 h-14 flex-shrink-0 ml-6 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#F5F1ED]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-[#F5F1ED] hover:bg-[#F5F1ED]/90 text-[#272727] rounded-full w-[2rem] h-[2rem] flex-shrink-0 ml-8 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#F5F1ED]/20"
               >
                 <Send className="w-[1.5rem] h-[1.5rem]" />
               </Button>

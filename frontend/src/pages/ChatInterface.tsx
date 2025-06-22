@@ -11,6 +11,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../compone
 import { DndProvider, useDrag, useDrop } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import TSCircuitRenderer from "../components/TSCircuitRenderer"
+import type { BOMItem } from "@/types"
 
 type PanelPosition = "left" | "right" | "bottom" | "center" | "hidden"
 
@@ -175,11 +176,90 @@ function ChatInterfaceContent() {
   const initialPrompt = searchParams.get('prompt')
   
   const [circuitBoard, setCircuitBoard] = useState<string>(`<board></board>`)
+  const [code, setCode] = useState(`// Arduino Firmware for tscircuit
+#include <Arduino.h>
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.println("Circuit initialized");
+}
+
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(1000);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(1000);
+  
+  Serial.println("LED blink cycle complete");
+}`)
+  const [bomItems, setBomItems] = useState<BOMItem[]>([
+    {
+      id: "1",
+      component: "Arduino Uno R3",
+      quantity: 1,
+      unitPrice: 25.0,
+      link: "https://store.arduino.cc/products/arduino-uno-rev3",
+    },
+    {
+      id: "2",
+      component: "LED (Red)",
+      quantity: 5,
+      unitPrice: 0.25,
+      link: "https://www.digikey.com/en/products/detail/kingbright/WP7113ID/1747663",
+    },
+    {
+      id: "3",
+      component: "Resistor 220Ω",
+      quantity: 5,
+      unitPrice: 0.1,
+      link: "https://www.mouser.com/ProductDetail/YAGEO/CFR-25JB-52-220R",
+    },
+    {
+      id: "4",
+      component: "Breadboard",
+      quantity: 1,
+      unitPrice: 5.5,
+      link: "https://www.adafruit.com/product/64",
+    },
+    {
+      id: "5",
+      component: "LM35 Temperature Sensor",
+      quantity: 1,
+      unitPrice: 3.2,
+      link: "https://www.sparkfun.com/products/10988",
+    },
+  ])
+  const [componentsData, setComponentsData] = useState<any>(null)
   
   // Debug circuit board changes
   useEffect(() => {
     console.log('Circuit board updated:', circuitBoard)
   }, [circuitBoard])
+
+  // Update BOM table when components data is received
+  useEffect(() => {
+    if (componentsData && componentsData.data && componentsData.data.choices && componentsData.data.choices[0]) {
+      try {
+        const content = componentsData.data.choices[0].message.content
+        const components = JSON.parse(content)
+        
+        if (Array.isArray(components)) {
+          const newBomItems = components.map((item: any, index: number) => ({
+            id: (index + 1).toString(),
+            component: item.component || 'Unknown Component',
+            quantity: item.quantity || 1,
+            unitPrice: item.unitPrice || 0,
+            link: item.link || '#',
+          }))
+          setBomItems(newBomItems)
+          console.log('Updated BOM with components:', newBomItems)
+        }
+      } catch (error) {
+        console.error('Error parsing components data:', error)
+      }
+    }
+  }, [componentsData])
 
   // State to track panel positions
   const [panelPositions, setPanelPositions] = useState<Record<string, PanelPosition>>({
@@ -194,21 +274,25 @@ function ChatInterfaceContent() {
       id: "chat",
       title: "chat",
       icon: PANEL_ICONS.chat,
-      component: <ChatPanel setCircuit={setCircuitBoard} initialPrompt={initialPrompt} />,
+      component: <ChatPanel 
+        setCircuit={setCircuitBoard} 
+        setComponentsData={setComponentsData}
+        initialPrompt={initialPrompt} 
+      />,
       position: panelPositions.chat,
     },
     {
       id: "code",
       title: "code",
       icon: PANEL_ICONS.code,
-      component: <CodeEditor />,
+      component: <CodeEditor code={code} onCodeChange={setCode} />,
       position: panelPositions.code,
     },
     {
       id: "bom",
       title: "bom",
       icon: PANEL_ICONS.bom,
-      component: <BOMTable />,
+      component: <BOMTable bomItems={bomItems} onBomChange={setBomItems} />,
       position: panelPositions.bom,
     },
   ]

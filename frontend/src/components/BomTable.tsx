@@ -1,77 +1,16 @@
 "use client"
 
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Package, Plus, Trash2, Download, ExternalLink } from "lucide-react"
+import type { BOMItem } from "@/types"
 
-interface BOMItem {
-  id: string
-  component: string
-  description: string
-  quantity: number
-  unitPrice: number
-  supplier: string
-  supplierLink: string
-  datasheet?: string
-}
-
-export function BOMTable() {
-  const [bomItems, setBomItems] = useState<BOMItem[]>([
-    {
-      id: "1",
-      component: "Arduino Uno R3",
-      description: "Microcontroller board",
-      quantity: 1,
-      unitPrice: 25.0,
-      supplier: "Arduino Store",
-      supplierLink: "https://store.arduino.cc/products/arduino-uno-rev3",
-      datasheet: "https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf",
-    },
-    {
-      id: "2",
-      component: "LED (Red)",
-      description: "5mm red LED",
-      quantity: 5,
-      unitPrice: 0.25,
-      supplier: "Digikey",
-      supplierLink: "https://www.digikey.com/en/products/detail/kingbright/WP7113ID/1747663",
-    },
-    {
-      id: "3",
-      component: "Resistor 220Ω",
-      description: "1/4W carbon film resistor",
-      quantity: 5,
-      unitPrice: 0.1,
-      supplier: "Mouser",
-      supplierLink: "https://www.mouser.com/ProductDetail/YAGEO/CFR-25JB-52-220R",
-    },
-    {
-      id: "4",
-      component: "Breadboard",
-      description: "Half-size breadboard",
-      quantity: 1,
-      unitPrice: 5.5,
-      supplier: "Adafruit",
-      supplierLink: "https://www.adafruit.com/product/64",
-    },
-    {
-      id: "5",
-      component: "LM35 Temperature Sensor",
-      description: "Precision temperature sensor",
-      quantity: 1,
-      unitPrice: 3.2,
-      supplier: "SparkFun",
-      supplierLink: "https://www.sparkfun.com/products/10988",
-      datasheet: "https://www.ti.com/lit/ds/symlink/lm35.pdf",
-    },
-  ])
-
+export function BOMTable({ bomItems, onBomChange }: { bomItems: BOMItem[]; onBomChange: (items: BOMItem[]) => void }) {
   const totalCost = bomItems.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0)
 
   const handleDeleteItem = (id: string) => {
-    setBomItems((prev) => prev.filter((item) => item.id !== id))
+    onBomChange(bomItems.filter((item) => item.id !== id))
   }
 
   const openLink = (url: string) => {
@@ -120,33 +59,20 @@ export function BOMTable() {
                   {bomItems.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell className="font-medium">{item.component}</TableCell>
-                      <TableCell className="text-sm text-charcoal/70">{item.description}</TableCell>
                       <TableCell>{item.quantity}</TableCell>
                       <TableCell>${item.unitPrice.toFixed(2)}</TableCell>
                       <TableCell className="font-medium">${(item.quantity * item.unitPrice).toFixed(2)}</TableCell>
-                      <TableCell className="text-sm">{item.supplier}</TableCell>
                       <TableCell>
                         <div className="flex gap-1">
                           <Button
                             size="sm"
                             variant="ghost"
-                            onClick={() => openLink(item.supplierLink)}
+                            onClick={() => openLink(item.link)}
                             className="p-1 h-6 w-6 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                             title="View on supplier website"
                           >
                             <ExternalLink className="w-3 h-3" />
                           </Button>
-                          {item.datasheet && (
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => item.datasheet && openLink(item.datasheet)}
-                              className="p-1 h-6 w-6 text-green-600 hover:text-green-700 hover:bg-green-50"
-                              title="View datasheet"
-                            >
-                              📄
-                            </Button>
-                          )}
                         </div>
                       </TableCell>
                       <TableCell>

@@ -1,3 +1,3 @@
-const BACKEND_URL = "https://0bf3-135-180-123-15.ngrok-free.app";
+const BACKEND_URL = "http://localhost:3001";
 
 export { BACKEND_URL };

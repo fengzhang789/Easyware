@@ -29,9 +29,11 @@ const CIRCUIT_SUGGESTIONS = [
 
 export function ChatPanel({
   setCircuit,
+  setComponentsData,
   initialPrompt,
 }: {
   setCircuit: (circuit: string) => void
+  setComponentsData: (data: any) => void
   initialPrompt?: string | null
 }) {
   const [messages, setMessages] = useState<Message[]>([])
@@ -119,12 +121,15 @@ export function ChatPanel({
         console.log('Cleaned circuit length:', cleaned.length)
         
         setCircuit(cleaned)
+        setComponentsData(componentsResult)
+        console.log(componentsResult)
       } else {
         console.error('Diagrams request failed or no data:', reactComponentsData.status, diagramsResult)
       }
 
       console.log(JSON.stringify(JSON.parse(JSON.stringify(componentsResult, null, 2)), null, 2))
       console.log(JSON.stringify(JSON.parse(JSON.stringify(diagramsResult, null, 2)), null, 2))
+      console.log(JSON.stringify(JSON.parse(JSON.stringify(componentsData, null, 2)), null, 2))
 
       // Handle components response
       if (componentsData.ok) {
@@ -138,6 +143,7 @@ export function ChatPanel({
           type: "bom"
         }
         setMessages((prev) => [...prev, assistantMessage])
+        
       }
 
       // Handle diagrams response

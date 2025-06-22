@@ -1,33 +1,9 @@
 "use client"
-
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Code, Download } from "lucide-react"
 import Editor from "@monaco-editor/react"
 
-export function CodeEditor() {
-  const [code, setCode] = useState(`// Arduino Firmware for tscircuit
-#include <Arduino.h>
-
-void setup() {
-  Serial.begin(9600);
-  pinMode(LED_BUILTIN, OUTPUT);
-  Serial.println("Circuit initialized");
-}
-
-void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);
-  delay(1000);
-  digitalWrite(LED_BUILTIN, LOW);
-  delay(1000);
-  
-  Serial.println("LED blink cycle complete");
-}`)
-
-  const handleEditorChange = (value: string | undefined) => {
-    setCode(value || "")
-  }
-
+export function CodeEditor({ code, onCodeChange }: { code: string; onCodeChange: (code: string) => void }) {
   const handleExport = () => {
     const blob = new Blob([code], { type: "text/plain" })
     const url = URL.createObjectURL(blob)
@@ -61,7 +37,7 @@ void loop() {
             height="100%"
             defaultLanguage="cpp"
             value={code}
-            onChange={handleEditorChange}
+            onChange={(value) => onCodeChange(value || "")}
             theme="vs-light"
             options={{
               minimap: { enabled: false },

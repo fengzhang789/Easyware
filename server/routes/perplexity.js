@@ -17,14 +17,13 @@ const HTTP_STATUS = {
 }
 
 const COMPONENT_COLLECTION = 'components'
-const DIAGRAM_COLLECTION = 'diagrams'
 
 COMPONENT_PROMPT = `
-  You are an expert AI assistant for hardware prototyping. 
-  Your task is to take a user's idea and generate all the 
-  necessary information to build it. Generate a list of 
+ ou are a hardware circuit designer in charge of prototyping 
+ circuit designs for builders trying to prototype basic 
+ hardware such as arduinos, etc. Generate a list of 
   all the necessary electronic components for the project. 
-   If there are two possible hardware components, 
+  If there are two possible hardware components, 
   please list ONE. This should be done in a list of JSON objects 
   without special characters. Please also format the JSON in a 
   way that is easy to parse. Please include the brand name, model, 
@@ -39,30 +38,16 @@ COMPONENT_PROMPT = `
   outside of these components.
 `
 
-DIAGRAM_PROMPT = `
-  You are an expert AI assistant for hardware prototyping. 
-  Imagine you are creating a diagram that displays all 
-  the components and how they connect. This diagram will 
-  include the basic names of all the components in the 
-  component list and how they interact with each other. 
-  Now, using this information, please provide a JSON string (without special characters)
-  these components -include their name, 
-  the type of component, what it's used for and 
-  its coordinates on the diagram relative to other 
-  components. Structure your entire response with this 
-  block, do not actually generate the diagram, just the JSON. 
-  Do not include any other text or explanations 
-  outside of these tags.
-`
-
 router.get('/components/:id', async function (req, res, next) {
   const response_id = req.params.id;
 
   const collection = getCollection(COMPONENT_COLLECTION);
-  const data = await collection.findOne({ _id: response_id });
+  const response = await collection.findOne({ _id: response_id });
 
-  if (data) {
+  if (response) {
     let content;
+    assert("data" in response, "Response is invalid. No data found.");
+    const data = response.data;
     assert("choices" in data, "Response is invalid. No choices found.");
     
     for (const choice of data.choices) {
@@ -146,95 +131,7 @@ router.post('/components', async function (req, res) {
   }
 });
 
-router.get('/diagrams/:id', async function (req, res, next) {
-  const response_id = req.params.id;
-
-  const collection = getCollection(DIAGRAM_COLLECTION);
-  const data = await collection.findOne({ _id: response_id });
-
-  if (data) {
-    let content;
-    assert("choices" in data, "Response is invalid. No choices found.");
-    
-    for (const choice of data.choices) {
-      assert("message" in choice, "Response is invalid. No message found.");
-      assert("content" in choice.message, "Response is invalid. No content found.");
-      assert("role" in choice.message && choice.message.role == "assistant", "Response is invalid. No role found or role is not 'assistant'.");
-
-      content = choice.message.content;
-      break;
-    }
-
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({
-      response_id: response_id,
-      status_code: HTTP_STATUS.OK,
-      data: content
-    }, null, 2));
-  } else {
-    res.status(HTTP_STATUS.NOT_FOUND).json({
-      response_id: response_id,
-      status_code: HTTP_STATUS.NOT_FOUND,
-      data: {},
-    });
-  }
-});
-
-router.post('/diagrams', async function (req, res) {
-  const perplexityApiKey = process.env.PERPLEXITY_API_KEY;
-
-  if (!perplexityApiKey) {
-    return res.status(404).json({ 
-      error: 'Perplexity API key not found',
-      message: 'Please add PERPLEXITY_API_KEY to your .env file'
-    });
-  }
-
-  try {
-    const response = await fetch('https://api.perplexity.ai/chat/completions', {
-      method: 'POST',
-      headers: {
-        'accept': 'application/json',
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${perplexityApiKey}`
-      },
-      body: JSON.stringify({
-        "model": "sonar-pro",
-        "messages": [ 
-          {
-            "role": "system",
-            "content": DIAGRAM_PROMPT
-          },
-          {
-            "role": "user",   
-            "content": "Can you help me build a bluetooth controlled door knob?"
-          }
-        ]
-      })
-    });
-
-    const data = await response.json();
-    const collection = getCollection(DIAGRAM_COLLECTION);
-    await collection.insertOne({
-      _id: data.id,
-      prompt: DIAGRAM_PROMPT,
-      data: data
-    });
-
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({
-      response_id: data.id,
-      status_code: HTTP_STATUS.OK,
-      message: "Diagram saved successfully"
-    }, null, 2));
-
-  } catch (error) {
-    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-      response_id: data.id,
-      status_code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-      message: error.message,
-    });
-  }
-});
-
-module.exports = router;
+module.exports = {
+  router,
+  HTTP_STATUS
+};

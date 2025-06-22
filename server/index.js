@@ -5,12 +5,14 @@ const PORT = process.env.PORT || 3001;
 const cors = require('cors')
 
 const perplexityRouter = require('./routes/perplexity');
+const claudeRouter = require('./routes/claude');
 const { connectToMongoDB, closeConnection } = require('./utils/mongodb');
 
 app.use(cors())
 app.use(express.json())
 
 app.use('/perplexity', perplexityRouter);
+app.use('/claude', claudeRouter);
 
 app.get('/products/:id', function (req, res, next) {
   res.json({msg: 'This is CORS-enabled for all origins!'})

@@ -6,6 +6,7 @@ export default function TSCircuitRenderer({
   board: string
 }) {
   const iframeRef = useRef<HTMLIFrameElement>(null)
+  const isIframeReady = useRef(false); // To track if the iframe is ready to receive messages
 
   useEffect(() => {
     const iframe = iframeRef.current
@@ -13,7 +14,8 @@ export default function TSCircuitRenderer({
 
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.runframe_type === "runframe_ready_to_receive") {
-        // Send circuit configuration
+        isIframeReady.current = true;
+        // When ready, immediately send the current board configuration
         iframe.contentWindow?.postMessage(
           {
             runframe_type: "runframe_props_changed",
@@ -25,7 +27,7 @@ export default function TSCircuitRenderer({
             },
           },
           "*"
-        )
+        );
       }
     }
 
@@ -34,7 +36,27 @@ export default function TSCircuitRenderer({
     return () => {
       window.removeEventListener("message", handleMessage)
     }
-  }, [board])
+  }, [board]) // board is in dependency array to re-run effect when board changes
+
+  // New useEffect to handle board changes after the iframe is ready
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe || !isIframeReady.current) return; // Only send if iframe exists and is ready
+
+    // Send circuit configuration whenever 'board' changes and iframe is ready
+    iframe.contentWindow?.postMessage(
+      {
+        runframe_type: "runframe_props_changed",
+        runframe_props: {
+          fsMap: {
+            "main.tsx": `circuit.add(${board})`,
+          },
+          entrypoint: "main.tsx",
+        },
+      },
+      "*"
+    );
+  }, [board, isIframeReady.current]); // Also depend on isIframeReady.current to re-trigger when it becomes true
 
   return (
     <iframe

@@ -6,6 +6,7 @@ import { Input } from "./ui/input"
 import { ScrollArea } from "./ui/scroll-area"
 import { Send, MessageCircle, Zap, Code, Package, Copy } from "lucide-react"
 import { BACKEND_URL } from "../constants"
+import cleanCircuitString from "../utils/circuit"
 
 interface Message {
   id: string
@@ -13,12 +14,6 @@ interface Message {
   sender: "user" | "assistant"
   timestamp: Date
   type?: "circuit" | "firmware" | "bom" | "general"
-}
-
-interface CircuitResponse {
-  content: string
-  type: "circuit" | "firmware" | "bom" | "general"
-  firmware?: string
 }
 
 const CIRCUIT_SUGGESTIONS = [
@@ -32,7 +27,11 @@ const CIRCUIT_SUGGESTIONS = [
   "Create a buzzer alarm circuit",
 ]
 
-export function ChatPanel() {
+export function ChatPanel({
+  setCircuit,
+}: {
+  setCircuit: (circuit: string) => void
+}) {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
@@ -76,19 +75,20 @@ export function ChatPanel() {
 
       const [componentsData, reactComponentsData] = await Promise.all([componentsResponse, reactComponentsResponse])
 
-      let cleaned = reactComponentsData.data.replace(/^```[a-zA-Z]*\n/, '').replace(/```$/, '');
-      cleaned = cleaned.replace(/\\n/g, '\n');
+      // Parse the JSON responses
+      const componentsResult = await componentsData.json()
+      const diagramsResult = await reactComponentsData.json()
 
+      const cleaned = cleanCircuitString(diagramsResult.data)
       console.log(cleaned)
+      setCircuit(cleaned)
 
 
-      console.log(JSON.stringify(JSON.parse(JSON.stringify(componentsData, null, 2)), null, 2))
-      console.log(JSON.stringify(JSON.parse(JSON.stringify(reactComponentsData, null, 2)), null, 2))
+      console.log(JSON.stringify(JSON.parse(JSON.stringify(componentsResult, null, 2)), null, 2))
+      console.log(JSON.stringify(JSON.parse(JSON.stringify(diagramsResult, null, 2)), null, 2))
 
       // Handle components response
       if (componentsData.ok) {
-        const componentsResult = await componentsData.json()
-        console.log('Components response:', componentsResult)
         
         // Add assistant message for components
         const assistantMessage: Message = {
@@ -103,7 +103,6 @@ export function ChatPanel() {
 
       // Handle diagrams response
       if (reactComponentsData.ok) {
-        const diagramsResult = await reactComponentsData.json()
         console.log('Diagrams response:', diagramsResult)
         
         // Add assistant message for diagrams
@@ -243,7 +242,7 @@ export function ChatPanel() {
       {/* Horizontal Scrollable Suggestions */}
       {!hasUserInteracted && (
         <div className="px-4 pb-2">
-          <ScrollArea className="w-full" orientation="horizontal">
+          <ScrollArea className="w-full">
             <div className="flex gap-2 pb-2 min-w-max">
               {CIRCUIT_SUGGESTIONS.map((suggestion, index) => (
                 <button

@@ -44,16 +44,6 @@ export default function Homepage() {
       <div className="absolute top-40 right-40 w-8 h-8 bg-gradient-to-r from-[#F5F1ED]/30 to-transparent rounded-full blur-sm animate-ping animate-fade-in" style={{ animationDelay: '1s' }} />
       <div className="absolute bottom-40 left-40 w-6 h-6 bg-gradient-to-r from-[#F5F1ED]/40 to-transparent rounded-full blur-sm animate-ping animate-fade-in" style={{ animationDelay: '1.2s', animation: 'ping 2s ease-in-out infinite 1.5s' }} />
       
-      {/* Header with enhanced styling */}
-      <header className="relative z-10 flex justify-end p-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-        <Button
-          variant="outline"
-          className="bg-[#F5F1ED]/10 backdrop-blur-md text-[#F5F1ED] border-[#F5F1ED]/30 px-8 py-3 rounded-full font-light hover:bg-[#F5F1ED]/20 hover:border-[#F5F1ED]/50 transition-all duration-500 hover:scale-105 shadow-lg shadow-[#F5F1ED]/10 hover:shadow-xl hover:shadow-[#F5F1ED]/20"
-        >
-          Sign in
-        </Button>
-      </header>
-      
       {/* Main content with enhanced animations */}
       <main className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-120px)] px-6">
         <div className="text-center space-y-8">
@@ -73,7 +63,7 @@ export default function Homepage() {
           
           {/* Enhanced search input */}
           <div className="relative w-[40rem] max-w-4xl mx-auto group animate-fade-in" style={{ animationDelay: '1.1s' }}>
-            <div className="flex items-center bg-[#F5F1ED]/10 backdrop-blur-md border border-[#F5F1ED]/30 rounded-3xl px-[1rem] py-[1rem] focus-within:ring-2 focus-within:ring-[#F5F1ED]/20 focus-within:border-[#F5F1ED]/50 focus-within:shadow-lg focus-within:shadow-[#F5F1ED]/10 transition-all duration-300 hover:shadow-md hover:shadow-[#F5F1ED]/5">
+            <div className="flex items-center bg-[#F5F1ED]/10 backdrop-blur-md border border-[#F5F1ED]/30 rounded-3xl px-[1rem] py-[1rem] focus-within:ring-2 focus-within:ring-[#F5F1ED]/20 focus-within:border-[#F5F1ED]/50 focus-within:shadow-lg focus-within:shadow-[#F5F1ED]/10 transition-all duration-300">
               <textarea
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
@@ -90,15 +80,16 @@ export default function Homepage() {
               />
               <Button
                 size="icon"
+                variant="ghost"
                 onClick={handleSend}
                 disabled={!inputValue.trim()}
-                className="bg-[#F5F1ED] hover:bg-[#F5F1ED]/90 text-[#272727] rounded-full w-[2rem] h-[2rem] flex-shrink-0 ml-8 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#F5F1ED]/20"
+                className="bg-[#F5F1ED] hover:bg-[#F5F1ED]/90 text-[#272727] rounded-full w-[2rem] h-[2rem] flex-shrink-0 ml-8 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#F5F1ED]/20 cursor-pointer"
               >
                 <Send className="w-[1.5rem] h-[1.5rem]" />
               </Button>
             </div>
             {/* Subtle glow around input */}
-            <div className="absolute inset-0 blur-xl bg-[#F5F1ED]/5 rounded-3xl -z-10 group-hover:bg-[#F5F1ED]/8 transition-all duration-300" />
+            <div className="absolute inset-0 blur-xl bg-[#F5F1ED]/5 rounded-3xl -z-10 transition-all duration-300" />
           </div>
         </div>
       </main>

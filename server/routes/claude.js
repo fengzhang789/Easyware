@@ -48,35 +48,7 @@ router.post('/diagrams', async function (req, res) {
                 fullResponse += text;
                 process.stdout.write(text);
             }
-        }
-        
-        const tsCodeMatch = fullResponse.match(/```tsx\s*([\s\S]*?)\s*```/);
-        let tsCode = '';
-        
-        if (tsCodeMatch) {
-            tsCode = tsCodeMatch[1];
-            console.log('TypeScript code extracted successfully');
-        } else {
-            const codeMatch = fullResponse.match(/```\s*([\s\S]*?)\s*```/);
-            if (codeMatch) {
-                tsCode = codeMatch[1];
-                console.log('Code block extracted (may not be TSX)');
-            } else {
-                const jsxMatch = fullResponse.match(/(<board[\s\S]*?<\/board>)/);
-                if (jsxMatch) {
-                    tsCode = `export default () => (\n  ${jsxMatch[1]}\n)`;
-                    console.log('JSX content extracted and wrapped in export function');
-                } else {
-                    console.log('No code block or JSX content found in response');
-                }
-            }
-        }
-
-        if (tsCode) {
-            const responsePath = path.join(__dirname, '../../frontend/public/responses/response.txt');
-            fs.writeFileSync(responsePath, tsCode, 'utf8');
-            console.log('TypeScript code saved to response.txt');
-        }
+        }    
         
         return res.json({
             success: HTTP_STATUS.OK,

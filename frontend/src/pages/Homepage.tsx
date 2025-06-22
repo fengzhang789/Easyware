@@ -2,8 +2,11 @@
 
 import { Button } from "../components/ui/button"
 import { Send } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 export default function Homepage() {
+  const navigate = useNavigate()
+
   return (
     <div className="h-screen bg-[#1A1A1A] relative overflow-hidden flex flex-col">
       <div className="flex justify-end p-[1rem] animate-fade-in-up-instant">
@@ -37,6 +40,7 @@ export default function Homepage() {
               </div>
               <Button
                 size="icon"
+                onClick={() => navigate('/chat')}
                 className="bg-[#ffffff] hover:bg-[#d9d9d9] rounded-full w-6 h-6 flex-shrink-0 !mx-[0.5rem] !shadow-none !outline-none !border-none focus:ring-0 focus:outline-none focus:border-none focus-visible:shadow-none focus-visible:ring-0 focus-visible:outline-none focus-visible:border-none p-[0.3rem]"
               >
                 <Send className="w-[1rem] h-[1rem] text-[#000000]" />

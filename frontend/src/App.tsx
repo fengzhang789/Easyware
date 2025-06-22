@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Homepage from './pages/Homepage'
-import ChatInterface from './pages/ChatInterface'
+import { ChatInterface } from './pages/ChatInterface'
 
 const App = () => {
   return (

@@ -1,195 +1,307 @@
 export default () => (
-  <board width="120mm" height="80mm">
-    {/* Arduino Nano */}
+  <board width="120mm" height="80mm" autorouter="sequential-trace">
+    <net name="V3_3" />
+    <net name="GND" />
+    <net name="SDA" />
+    <net name="SCL" />
+    
     <chip
       name="U1"
-      footprint="dip30"
-      pinLabels={{
-        pin1: "D1/TX",
-        pin2: "D0/RX",
-        pin3: "RST",
-        pin4: "GND",
-        pin5: "D2",
-        pin6: "D3",
-        pin7: "D4",
-        pin8: "D5",
-        pin9: "D6",
-        pin10: "D7",
-        pin11: "D8",
-        pin12: "D9",
-        pin13: "D10",
-        pin14: "D11",
-        pin15: "D12",
-        pin16: "D13",
-        pin17: "3V3",
-        pin18: "REF",
-        pin19: "A0",
-        pin20: "A1",
-        pin21: "A2",
-        pin22: "A3",
-        pin23: "A4",
-        pin24: "A5",
-        pin25: "A6",
-        pin26: "A7",
-        pin27: "5V",
-        pin28: "RST",
-        pin29: "GND",
-        pin30: "VIN"
-      }}
-      pcbX={0}
-      pcbY={0}
-      schX={0}
-      schY={0}
-    />
-
-    {/* HC-05 Bluetooth Module */}
-    <chip
-      name="U2"
-      footprint="pinrow6"
-      pinLabels={{
-        pin1: "STATE",
-        pin2: "RXD",
-        pin3: "TXD",
-        pin4: "GND",
-        pin5: "VCC",
-        pin6: "EN"
-      }}
+      footprint="qfn20"
       pcbX={-40}
       pcbY={20}
-      schX={-6}
-      schY={4}
+      schX={-5}
+      schY={8}
+      pinLabels={{
+        pin1: "VDD",
+        pin2: "GND",
+        pin3: "SDA",
+        pin4: "SCL",
+        pin5: "WAKE",
+        pin6: "RST",
+        pin7: "INT",
+        pin8: "NC1",
+        pin9: "NC2",
+        pin10: "NC3",
+        pin11: "NC4",
+        pin12: "NC5",
+        pin13: "NC6",
+        pin14: "NC7",
+        pin15: "NC8",
+        pin16: "NC9",
+        pin17: "NC10",
+        pin18: "NC11",
+        pin19: "NC12",
+        pin20: "NC13"
+      }}
     />
-
-    {/* Servo Motor Connector */}
-    <pinheader
-      name="J1"
-      pinCount={3}
-      pitch="2.54mm"
-      pinLabels={["PWM", "VCC", "GND"]}
-      pcbX={40}
-      pcbY={0}
-      schX={6}
-      schY={0}
+    
+    <chip
+      name="U2"
+      footprint="soic8"
+      pcbX={-10}
+      pcbY={20}
+      schX={0}
+      schY={8}
+      pinLabels={{
+        pin1: "VCC",
+        pin2: "GND",
+        pin3: "RX",
+        pin4: "TX",
+        pin5: "NC1",
+        pin6: "NC2",
+        pin7: "NC3",
+        pin8: "NC4"
+      }}
     />
-
-    {/* Transistor 2N2222 */}
-    <transistor
-      name="Q1"
-      type="npn"
-      footprint="to92"
-      pcbX={25}
-      pcbY={-15}
-      schX={4}
-      schY={-3}
+    
+    <chip
+      name="U3"
+      footprint="qfn20"
+      pcbX={20}
+      pcbY={20}
+      schX={5}
+      schY={8}
+      pinLabels={{
+        pin1: "VDD",
+        pin2: "GND",
+        pin3: "VDDIO",
+        pin4: "SDI",
+        pin5: "SCK",
+        pin6: "SDO",
+        pin7: "CSB",
+        pin8: "NC1",
+        pin9: "NC2",
+        pin10: "NC3",
+        pin11: "NC4",
+        pin12: "NC5",
+        pin13: "NC6",
+        pin14: "NC7",
+        pin15: "NC8",
+        pin16: "NC9",
+        pin17: "NC10",
+        pin18: "NC11",
+        pin19: "NC12",
+        pin20: "NC13"
+      }}
     />
-
-    {/* Protection Diode */}
-    <diode
-      name="D1"
-      footprint="axial"
-      pcbX={40}
-      pcbY={-15}
-      schX={6}
-      schY={-3}
+    
+    <chip
+      name="U4"
+      footprint="soic16_w7mm_p0.8mm"
+      pcbX={-25}
+      pcbY={-10}
+      schX={-3}
+      schY={2}
+      pinLabels={{
+        pin1: "GND",
+        pin2: "VCC",
+        pin3: "D0",
+        pin4: "D1",
+        pin5: "RES",
+        pin6: "DC",
+        pin7: "CS",
+        pin8: "NC1",
+        pin9: "NC2",
+        pin10: "NC3",
+        pin11: "NC4",
+        pin12: "NC5",
+        pin13: "NC6",
+        pin14: "NC7",
+        pin15: "NC8",
+        pin16: "NC9"
+      }}
     />
-
-    {/* Base Resistor */}
+    
+    <chip
+      name="U5"
+      footprint="qfp44"
+      pcbX={10}
+      pcbY={-10}
+      schX={3}
+      schY={2}
+      pinLabels={{
+        pin1: "VDD",
+        pin2: "EN",
+        pin3: "VP",
+        pin4: "VN",
+        pin5: "IO34",
+        pin6: "IO35",
+        pin7: "IO32",
+        pin8: "IO33",
+        pin9: "IO25",
+        pin10: "IO26",
+        pin11: "IO27",
+        pin12: "IO14",
+        pin13: "IO12",
+        pin14: "GND",
+        pin15: "IO13",
+        pin16: "IO9",
+        pin17: "IO10",
+        pin18: "IO11",
+        pin19: "VDD2",
+        pin20: "IO6",
+        pin21: "IO7",
+        pin22: "IO8",
+        pin23: "IO15",
+        pin24: "IO2",
+        pin25: "IO0",
+        pin26: "IO4",
+        pin27: "IO16",
+        pin28: "IO17",
+        pin29: "IO5",
+        pin30: "IO18",
+        pin31: "IO19",
+        pin32: "NC",
+        pin33: "IO21",
+        pin34: "RXD",
+        pin35: "TXD",
+        pin36: "IO22",
+        pin37: "IO23",
+        pin38: "GND2",
+        pin39: "GND3",
+        pin40: "RXD0",
+        pin41: "TXD0",
+        pin42: "GND4",
+        pin43: "GND5",
+        pin44: "GND6"
+      }}
+    />
+    
     <resistor
       name="R1"
-      resistance="10k"
-      footprint="0805"
-      pcbX={10}
-      pcbY={-15}
-      schX={2}
-      schY={-3}
-    />
-
-    {/* Status LEDs */}
-    <led
-      name="LED1"
-      color="red"
-      footprint="0805"
-      pcbX={-20}
+      resistance="4.7k"
+      footprint="0603"
+      pcbX={-40}
       pcbY={-20}
-      schX={-3}
-      schY={-4}
+      schX={-5}
+      schY={-2}
     />
-
-    <led
-      name="LED2"
-      color="green"
-      footprint="0805"
-      pcbX={-10}
-      pcbY={-20}
-      schX={-1.5}
-      schY={-4}
-    />
-
-    {/* LED Current Limiting Resistors */}
+    
     <resistor
       name="R2"
-      resistance="330"
-      footprint="0805"
-      pcbX={-20}
-      pcbY={-10}
+      resistance="4.7k"
+      footprint="0603"
+      pcbX={-30}
+      pcbY={-20}
       schX={-3}
       schY={-2}
     />
-
+    
     <resistor
       name="R3"
-      resistance="330"
-      footprint="0805"
-      pcbX={-10}
-      pcbY={-10}
-      schX={-1.5}
+      resistance="10k"
+      footprint="0603"
+      pcbX={30}
+      pcbY={-20}
+      schX={5}
       schY={-2}
     />
-
-    {/* Power Input Connector */}
-    <pinheader
-      name="J2"
-      pinCount={2}
-      pitch="2.54mm"
-      pinLabels={["5V", "GND"]}
-      pcbX={0}
-      pcbY={30}
-      schX={0}
-      schY={6}
+    
+    <capacitor
+      name="C1"
+      capacitance="0.1uF"
+      footprint="0603"
+      pcbX={-50}
+      pcbY={10}
+      schX={-7}
+      schY={5}
     />
-
-    {/* Connections */}
-    {/* Power connections */}
-    <trace from=".J2 > .pin1" to=".U1 > .pin27" />
-    <trace from=".J2 > .pin2" to=".U1 > .pin29" />
-    <trace from=".U1 > .pin27" to=".U2 > .pin5" />
-    <trace from=".U1 > .pin29" to=".U2 > .pin4" />
     
-    {/* Bluetooth module connections */}
-    <trace from=".U1 > .pin1" to=".U2 > .pin2" />
-    <trace from=".U1 > .pin2" to=".U2 > .pin3" />
+    <capacitor
+      name="C2"
+      capacitance="0.1uF"
+      footprint="0603"
+      pcbX={-20}
+      pcbY={10}
+      schX={-1}
+      schY={5}
+    />
     
-    {/* Servo control through transistor */}
-    <trace from=".U1 > .pin12" to=".R1 > .pin1" />
-    <trace from=".R1 > .pin2" to=".Q1 > .base" />
-    <trace from=".Q1 > .emitter" to=".U1 > .pin29" />
-    <trace from=".Q1 > .collector" to=".J1 > .pin1" />
+    <capacitor
+      name="C3"
+      capacitance="0.1uF"
+      footprint="0603"
+      pcbX={10}
+      pcbY={10}
+      schX={2}
+      schY={5}
+    />
     
-    {/* Servo power connections */}
-    <trace from=".J1 > .pin2" to=".J2 > .pin1" />
-    <trace from=".J1 > .pin3" to=".U1 > .pin29" />
+    <capacitor
+      name="C4"
+      capacitance="10uF"
+      footprint="0805"
+      pcbX={30}
+      pcbY={10}
+      schX={7}
+      schY={5}
+    />
     
-    {/* Protection diode across servo */}
-    <trace from=".D1 > .anode" to=".J1 > .pin3" />
-    <trace from=".D1 > .cathode" to=".J1 > .pin2" />
+    <capacitor
+      name="C5"
+      capacitance="10uF"
+      footprint="0805"
+      pcbX={40}
+      pcbY={10}
+      schX={9}
+      schY={5}
+    />
     
-    {/* LED connections */}
-    <trace from=".U1 > .pin13" to=".R2 > .pin1" />
-    <trace from=".R2 > .pin2" to=".LED1 > .anode" />
-    <trace from=".LED1 > .cathode" to=".U1 > .pin29" />
+    <trace from=".U1 > .VDD" to="net.V3_3" maxLength="30mm" />
+    <trace from=".U1 > .GND" to="net.GND" maxLength="30mm" />
+    <trace from=".U1 > .SDA" to="net.SDA" maxLength="50mm" />
+    <trace from=".U1 > .SCL" to="net.SCL" maxLength="50mm" />
     
-    <trace from=".U1 > .pin16" to=".R3 > .pin1" />
-    <trace from=".R3 > .pin2" to=".LED2 > .anode" />
-    <trace from=".LED2 > .cathode" to=".U1 > .pin29" />
+    <trace from=".U2 > .VCC" to="net.V3_3" maxLength="30mm" />
+    <trace from=".U2 > .GND" to="net.GND" maxLength="30mm" />
+    
+    <trace from=".U3 > .VDD" to="net.V3_3" maxLength="30mm" />
+    <trace from=".U3 > .VDDIO" to="net.V3_3" maxLength="30mm" />
+    <trace from=".U3 > .GND" to="net.GND" maxLength="30mm" />
+    <trace from=".U3 > .SDI" to="net.SDA" maxLength="50mm" />
+    <trace from=".U3 > .SCK" to="net.SCL" maxLength="50mm" />
+    
+    <trace from=".U4 > .VCC" to="net.V3_3" maxLength="30mm" />
+    <trace from=".U4 > .GND" to="net.GND" maxLength="30mm" />
+    <trace from=".U4 > .D0" to="net.SDA" maxLength="50mm" />
+    <trace from=".U4 > .D1" to="net.SCL" maxLength="50mm" />
+    
+    <trace from=".U5 > .VDD" to="net.V3_3" maxLength="30mm" />
+    <trace from=".U5 > .VDD2" to="net.V3_3" maxLength="30mm" />
+    <trace from=".U5 > .GND" to="net.GND" maxLength="30mm" />
+    <trace from=".U5 > .GND2" to="net.GND" maxLength="30mm" />
+    <trace from=".U5 > .GND3" to="net.GND" maxLength="30mm" />
+    <trace from=".U5 > .GND4" to="net.GND" maxLength="30mm" />
+    <trace from=".U5 > .GND5" to="net.GND" maxLength="30mm" />
+    <trace from=".U5 > .GND6" to="net.GND" maxLength="30mm" />
+    <trace from=".U5 > .IO21" to="net.SDA" maxLength="50mm" />
+    <trace from=".U5 > .IO22" to="net.SCL" maxLength="50mm" />
+    <trace from=".U5 > .RXD" to=".U2 > .TX" maxLength="40mm" />
+    <trace from=".U5 > .TXD" to=".U2 > .RX" maxLength="40mm" />
+    
+    <trace from=".R1 > .pin1" to="net.V3_3" maxLength="20mm" />
+    <trace from=".R1 > .pin2" to="net.SDA" maxLength="20mm" />
+    
+    <trace from=".R2 > .pin1" to="net.V3_3" maxLength="20mm" />
+    <trace from=".R2 > .pin2" to="net.SCL" maxLength="20mm" />
+    
+    <trace from=".R3 > .pin1" to="net.V3_3" maxLength="20mm" />
+    <trace from=".R3 > .pin2" to=".U5 > .EN" maxLength="30mm" />
+    
+    <trace from=".C1 > .pin1" to="net.V3_3" maxLength="20mm" />
+    <trace from=".C1 > .pin2" to="net.GND" maxLength="20mm" />
+    
+    <trace from=".C2 > .pin1" to="net.V3_3" maxLength="20mm" />
+    <trace from=".C2 > .pin2" to="net.GND" maxLength="20mm" />
+    
+    <trace from=".C3 > .pin1" to="net.V3_3" maxLength="20mm" />
+    <trace from=".C3 > .pin2" to="net.GND" maxLength="20mm" />
+    
+    <trace from=".C4 > .pin1" to="net.V3_3" maxLength="20mm" />
+    <trace from=".C4 > .pin2" to="net.GND" maxLength="20mm" />
+    
+    <trace from=".C5 > .pin1" to="net.V3_3" maxLength="20mm" />
+    <trace from=".C5 > .pin2" to="net.GND" maxLength="20mm" />
   </board>
 )

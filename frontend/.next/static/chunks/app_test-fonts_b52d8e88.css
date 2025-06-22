@@ -1,0 +1,26 @@
+/* [project]/app/test-fonts.css [app-client] (css) */
+@font-face {
+  font-family: CrimsonText;
+  src: url("/fonts/CrimsonText-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: CrimsonText-Italic;
+  src: url("/fonts/CrimsonText-Italic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+.test-crimson {
+  font-family: CrimsonText, serif !important;
+}
+
+.test-crimson-italic {
+  font-family: CrimsonText-Italic, serif !important;
+}
+
+/*# sourceMappingURL=app_test-fonts_b52d8e88.css.map*/

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { ScrollArea } from "./ui/scroll-area"
@@ -29,22 +29,37 @@ const CIRCUIT_SUGGESTIONS = [
 
 export function ChatPanel({
   setCircuit,
+  initialPrompt,
 }: {
   setCircuit: (circuit: string) => void
+  initialPrompt?: string | null
 }) {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
   const [hasUserInteracted, setHasUserInteracted] = useState(false)
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim() || isGenerating) return
+  // Auto-send initial prompt if provided
+  useEffect(() => {
+    if (initialPrompt && !hasUserInteracted) {
+      setInputValue(initialPrompt)
+      setHasUserInteracted(true)
+      // Use setTimeout to ensure the component is fully mounted
+      setTimeout(() => {
+        handleSendMessageInternal(initialPrompt)
+      }, 100)
+    }
+  }, [initialPrompt, hasUserInteracted])
+
+  const handleSendMessageInternal = async (customInput?: string) => {
+    const messageToSend = customInput || inputValue
+    if (!messageToSend.trim() || isGenerating) return
 
     setHasUserInteracted(true)
 
     const newMessage: Message = {
       id: Date.now().toString(),
-      content: inputValue,
+      content: messageToSend,
       sender: "user",
       timestamp: new Date(),
     }
@@ -60,7 +75,7 @@ export function ChatPanel({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: inputValue,
+          message: messageToSend,
         }),
       })
       const reactComponentsResponse = fetch(`${BACKEND_URL}/claude/diagrams`, {
@@ -69,7 +84,7 @@ export function ChatPanel({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: inputValue,
+          message: messageToSend,
         }),
       })
 
@@ -79,10 +94,25 @@ export function ChatPanel({
       const componentsResult = await componentsData.json()
       const diagramsResult = await reactComponentsData.json()
 
-      const cleaned = cleanCircuitString(diagramsResult.data)
-      console.log(cleaned)
-      setCircuit(cleaned)
+      console.log('Raw diagrams result:', diagramsResult)
+      console.log('Diagrams data:', diagramsResult.data)
 
+      // Only set circuit if the diagrams request was successful
+      if (reactComponentsData.ok && diagramsResult.data) {
+        console.log('API response status:', reactComponentsData.status)
+        console.log('API response headers:', reactComponentsData.headers)
+        console.log('Raw diagrams data type:', typeof diagramsResult.data)
+        console.log('Raw diagrams data length:', diagramsResult.data.length)
+        
+        const cleaned = cleanCircuitString(diagramsResult.data)
+        console.log('Cleaned circuit:', cleaned)
+        console.log('Cleaned circuit type:', typeof cleaned)
+        console.log('Cleaned circuit length:', cleaned.length)
+        
+        setCircuit(cleaned)
+      } else {
+        console.error('Diagrams request failed or no data:', reactComponentsData.status, diagramsResult)
+      }
 
       console.log(JSON.stringify(JSON.parse(JSON.stringify(componentsResult, null, 2)), null, 2))
       console.log(JSON.stringify(JSON.parse(JSON.stringify(diagramsResult, null, 2)), null, 2))
@@ -129,6 +159,10 @@ export function ChatPanel({
     }
 
     setIsGenerating(false)
+  }
+
+  const handleSendMessage = async (customInput?: string) => {
+    await handleSendMessageInternal(customInput)
   }
 
   const handleSuggestionClick = (suggestion: string) => {
@@ -269,7 +303,7 @@ export function ChatPanel({
             disabled={isGenerating}
           />
           <Button
-            onClick={handleSendMessage}
+            onClick={() => handleSendMessage()}
             size="icon"
             className="bg-charcoal hover:bg-charcoal/80 text-cream"
             disabled={isGenerating}

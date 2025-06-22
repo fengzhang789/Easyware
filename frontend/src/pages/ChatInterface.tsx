@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
+import { useSearchParams } from "react-router-dom"
 import { ChatPanel } from "../components/ChatPanel"
 import { CodeEditor } from "../components/CodeEditor"
 import { BOMTable } from "../components/BomTable"
@@ -168,30 +169,50 @@ export function ChatInterface() {
 }
 
 function ChatInterfaceContent() {
-  const [circuitBoard, setCircuitBoard] = useState<string>(`<board></board>`)
-  const [panels, setPanels] = useState<Panel[]>([
+  const [searchParams] = useSearchParams()
+  const initialPrompt = searchParams.get('prompt')
+  
+  const [circuitBoard, setCircuitBoard] = useState<string>(`<board>
+  // Circuit components will be added here
+  // Example: <led x={100} y={100} />
+</board>`)
+  
+  // Debug circuit board changes
+  useEffect(() => {
+    console.log('Circuit board updated:', circuitBoard)
+  }, [circuitBoard])
+
+  // State to track panel positions
+  const [panelPositions, setPanelPositions] = useState<Record<string, PanelPosition>>({
+    chat: "left",
+    code: "right",
+    bom: "right",
+  })
+
+  // Create panels dynamically to ensure ChatPanel has current setCircuit function
+  const panels: Panel[] = [
     {
       id: "chat",
       title: "chat",
       icon: PANEL_ICONS.chat,
-      component: <ChatPanel setCircuit={setCircuitBoard} />,
-      position: "left",
+      component: <ChatPanel setCircuit={setCircuitBoard} initialPrompt={initialPrompt} />,
+      position: panelPositions.chat,
     },
     {
       id: "code",
       title: "code",
       icon: PANEL_ICONS.code,
       component: <CodeEditor />,
-      position: "right",
+      position: panelPositions.code,
     },
     {
       id: "bom",
       title: "bom",
       icon: PANEL_ICONS.bom,
       component: <BOMTable />,
-      position: "right",
+      position: panelPositions.bom,
     },
-  ])
+  ]
 
   const [isDragging, setIsDragging] = useState(false)
   const [activeTabs, setActiveTabs] = useState<Record<PanelPosition, string>>({
@@ -219,14 +240,14 @@ function ChatInterfaceContent() {
   }
 
   const movePanel = (id: string, position: PanelPosition) => {
-    setPanels((prev) => prev.map((panel) => (panel.id === id ? { ...panel, position } : panel)))
+    setPanelPositions((prev) => ({ ...prev, [id]: position }))
     if (position !== "hidden") {
       setActiveTabs((prev) => ({ ...prev, [position]: id }))
     }
   }
 
   const closePanel = (id: string) => {
-    setPanels((prev) => prev.map((panel) => (panel.id === id ? { ...panel, position: "hidden" } : panel)))
+    setPanelPositions((prev) => ({ ...prev, [id]: "hidden" }))
   }
 
   const setActiveTab = (position: PanelPosition, id: string) => {

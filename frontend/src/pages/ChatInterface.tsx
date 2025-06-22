@@ -172,10 +172,7 @@ function ChatInterfaceContent() {
   const [searchParams] = useSearchParams()
   const initialPrompt = searchParams.get('prompt')
   
-  const [circuitBoard, setCircuitBoard] = useState<string>(`<board>
-  // Circuit components will be added here
-  // Example: <led x={100} y={100} />
-</board>`)
+  const [circuitBoard, setCircuitBoard] = useState<string>(`<board></board>`)
   
   // Debug circuit board changes
   useEffect(() => {

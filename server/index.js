@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import { router as perplexityRouter } from './routes/perplexity.js';
 import claudeRouter from './routes/claude.js';
+import lettaRouter from './routes/letta.js';
 import { connectToMongoDB, closeConnection } from './utils/mongodb.js';
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(express.json())
 
 app.use('/perplexity', perplexityRouter);
 app.use('/claude', claudeRouter);
+app.use('/letta', lettaRouter);
 
 app.get('/products/:id', function (req, res, next) {
   res.json({msg: 'This is CORS-enabled for all origins!'})

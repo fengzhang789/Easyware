@@ -9,6 +9,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.54.0",
     "assert": "^2.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",

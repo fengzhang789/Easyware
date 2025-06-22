@@ -265,7 +265,7 @@ export function ChatPanel({
   }
 
   return (
-    <div className="flex flex-col h-full bg-cream border-r border-charcoal/20">
+    <div className="flex flex-col bg-cream border-r border-charcoal/20" style={{ height: 'calc(100vh - 60px)' }}>
       <div className="p-4 border-b border-charcoal/20 flex-shrink-0">
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-semibold text-charcoal font-crimson-italic">Assistant</h2>
@@ -273,7 +273,7 @@ export function ChatPanel({
         <p className="text-sm text-charcoal/70 mt-1 font-crimson">Design circuits, generate firmware, create BOMs</p>
       </div>
 
-      <div ref={scrollAreaRef} className="flex-1 overflow-y-auto p-4 min-h-0">
+      <div ref={scrollAreaRef} className="flex-1 overflow-y-scroll p-4">
         <div className="space-y-4">
           {messages.length === 0 && !hasUserInteracted && (
             <div className="text-center text-charcoal/50 py-8">
@@ -315,7 +315,7 @@ export function ChatPanel({
         </div>
       </div>
       {!hasUserInteracted && (
-        <div className="px-4 pb-2 flex-shrink-0">
+        <div className="px-4 pb-2">
           <div className="w-full overflow-hidden">
             <div className="flex gap-2 pb-2 flex-wrap">
               {CIRCUIT_SUGGESTIONS.map((suggestion, index) => (
@@ -332,7 +332,7 @@ export function ChatPanel({
         </div>
       )}
 
-      <div className="p-4 border-t border-charcoal/20 flex-shrink-0">
+      <div className="p-4 border-t border-charcoal/20 ">
         <div className="flex gap-2">
           <Input
             value={inputValue}

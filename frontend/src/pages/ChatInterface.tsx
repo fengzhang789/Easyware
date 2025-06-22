@@ -220,7 +220,7 @@ function ChatInterfaceContent() {
   const panels: Panel[] = [
     {
       id: "chat",
-      title: "chat",
+      title: "Chat",
       icon: PANEL_ICONS.chat,
       component: <ChatPanel 
         setCircuit={setCircuitBoard} 
@@ -232,14 +232,14 @@ function ChatInterfaceContent() {
     },
     {
       id: "code",
-      title: "code",
+      title: "Code",
       icon: PANEL_ICONS.code,
       component: <CodeEditor code={code} onCodeChange={setCode} />,
       position: panelPositions.code,
     },
     {
       id: "bom",
-      title: "bom",
+      title: "BOM",
       icon: PANEL_ICONS.bom,
       component: <BOMTable bomItems={bomItems} onBomChange={setBomItems} />,
       position: panelPositions.bom,

@@ -3,14 +3,15 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { ChatPanel } from "@/components/ChatPanel"
-import { CodeEditor } from "@/components/CodeEditor"
-import { BOMTable } from "@/components/BomTable"
-import { Button } from "@/components/ui/button"
+import { ChatPanel } from "../components/ChatPanel"
+import { CodeEditor } from "../components/CodeEditor"
+import { BOMTable } from "../components/BomTable"
+import { Button } from "../components/ui/button"
 import { MessageCircle, Code, Package, HomeIcon, GripVertical, X } from "lucide-react"
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../components/ui/resizable"
 import { DndProvider, useDrag, useDrop } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
+import TSCircuitRenderer from "../components/TSCircuitRenderer"
 
 type PanelPosition = "left" | "right" | "bottom" | "center" | "hidden"
 
@@ -331,14 +332,17 @@ function ChatInterfaceContent() {
                 {centerPanels.length > 0 ? (
                   <ResizablePanelGroup direction="vertical" className="h-full">
                     <ResizablePanel defaultSize={70}>
-                      <div className="h-full bg-white relative overflow-hidden">
+                      {/* <div className="h-full bg-white relative overflow-hidden">
                         <iframe
                           src="https://tscircuit.com/editor?template=blank-circuit-board#data:application/gzip;base64,H4sIAJsBqGcAA91ZXW/bNhR9768g9JR0dSLJH3GHOIBne0ODtAnsxtswDIMs07EwWTRkKhlm9L+XlESKIkWRTvvUhwDhFS/vOYeX95IJ/G+PUgzWcBNkMQZn52B0A87eAHC9QkG6Bi/RGm9HztDd7RywhdHTFo+cKzq6IZMAOF6+BQsUByl4CBIYgw/JPsNggpIEhhil4O3ll3ze9T5KtjBYwzQfApAEOzhybj2nHJPvE5QleHT0Cw9qwiGJ7V/0eyQeM4arP0ZHl88JV3+Ojh2/zwyHcCt+J0P6fVitmdwFKxgfRse/nMX93Xj+k/MOFL91nL+LaZcFN05wiWIcPEEwh09ZHFBaZ/3lecUt3Eb7Gq1HTmuDEN6nEeHlHBD2/a7AlwE5lqbc6P0MnOWHT8470egT42+fpnVjl868f/xct/bKqaXtiyAU0aXjm5TrDJqlkzUpNjoM9kEYUUU25Cfl+lTSsAk1fSZcn/J7kITE7Llu9muDcp7vDur73+kaeby343Gf4W8h4muINPJwh25f4uEZeXTteHyMwhSFKMEpimMoAleSk2OuJWcUepXIbck5majJOXbV3Bx7amaO/bqtT23dum1AbA+/f5S8rwqr5D9sOhjviXEqAfJcapTW9CifqbSkR/lMJUweJTTtSUbKaNqXjJTSfLaYSefSo7T0B1NKA7F+qeWsHMopcDede6ADPqN9tfspPEQHOWvpRIajmMDS9l+rrJVz1jNU354Wr0/wzmlTMSPmWfsaxBXCRn1LgGZ9uwTvLwhjtDMD5qX+O0hsUFgvcI8AvoMbC3173wJXSIFGgVkKGBR+yOK4s0YvSQkCpYe8HhN4BwODkzJ64FZ9OMcvoVcy2jNntAbWKWmrwJJVlVBJopYgLUCdkpomrQxS2St1SgIqoJQElNuoWau8iyLa9Kdp9ExaKC2m4/+jXYa3be2UI5Ha6fDV3VS+/tHmo3Q52nyU2x9tPoqRdR6ln86kOLSbLhfaq6OkcHWVbL45lsNWiWn9n8XwOcARStpE5snxY4ts0thO4gVMn1EpNH+KCQVU8xbjpap6i/HLZ8tbTEmM6m7enBiax9hsvrz3itdY/us/5LpXjRofZzom4ivrBCYmIvY8/IqHX+Phax+ZUxiibB9HyZP0GNlpb/bNTxJOXn5bJY1vEqWUVrSaOjl/nbc3cvRCkBLQNPfI0RaSD6dBCMEmRbuRc3HrgRtwQY+pAzAihkfBUC5q8JhYe/hyDGKw8+AxdB7ikvUYPZNHl8XwDTwUj0drD86DedjzYB5DnYcwQUI14C7ijbSWFRjp07sWJn/bSKlioi/4MDriIo0++ig6yZQYDZI1gxPwWxMS0BSETD76KCSN2j1OJtR9BSHmwwkJizTD00bRHTUlhjWh3isIMR9OSFikGZ42St/kYSJU3bfWxX3LXJH5UuT0FmsL6rVXgCvmIcBr9+CMTZuuephU1ccwVjIlhn3tYzF0Z0v1YDG0HsKS9RhVeZU8hCXrMRoKcpEdFmnBopJDli96a2wlLCr3MCUSX9J6y/iS1lvGYyhy6jaAx1DkrDzaL3GVuhpxJycXTu5hUwFmSbCKIb2lFn9N2QkVwbjf/FAbLxtMFq3H9WX+P6WbN+dfAclBhlR2GgAA"
                           className="w-full h-full border-0"
                           title="TSCircuit Editor"
                           sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
                         />
-                      </div>
+                      </div> */}
+                      <TSCircuitRenderer board={`
+                        
+                      `} />
                     </ResizablePanel>
                     <ResizableHandle className="h-2 bg-charcoal/10 hover:bg-charcoal/20 transition-colors">
                       <div className="flex w-full items-center justify-center">
@@ -351,12 +355,12 @@ function ChatInterfaceContent() {
                   </ResizablePanelGroup>
                 ) : (
                   <div className="h-full bg-white relative overflow-hidden">
-                    <iframe
+                    {/* <iframe
                       src="https://tscircuit.com/editor?template=blank-circuit-board#data:application/gzip;base64,H4sIAJsBqGcAA91ZXW/bNhR9768g9JR0dSLJH3GHOIBne0ODtAnsxtswDIMs07EwWTRkKhlm9L+XlESKIkWRTvvUhwDhFS/vOYeX95IJ/G+PUgzWcBNkMQZn52B0A87eAHC9QkG6Bi/RGm9HztDd7RywhdHTFo+cKzq6IZMAOF6+BQsUByl4CBIYgw/JPsNggpIEhhil4O3ll3ze9T5KtjBYwzQfApAEOzhybj2nHJPvE5QleHT0Cw9qwiGJ7V/0eyQeM4arP0ZHl88JV3+Ojh2/zwyHcCt+J0P6fVitmdwFKxgfRse/nMX93Xj+k/MOFL91nL+LaZcFN05wiWIcPEEwh09ZHFBaZ/3lecUt3Eb7Gq1HTmuDEN6nEeHlHBD2/a7AlwE5lqbc6P0MnOWHT8470egT42+fpnVjl868f/xct/bKqaXtiyAU0aXjm5TrDJqlkzUpNjoM9kEYUUU25Cfl+lTSsAk1fSZcn/J7kITE7Llu9muDcp7vDur73+kaeby343Gf4W8h4muINPJwh25f4uEZeXTteHyMwhSFKMEpimMoAleSk2OuJWcUepXIbck5majJOXbV3Bx7amaO/bqtT23dum1AbA+/f5S8rwqr5D9sOhjviXEqAfJcapTW9CifqbSkR/lMJUweJTTtSUbKaNqXjJTSfLaYSefSo7T0B1NKA7F+qeWsHMopcDede6ADPqN9tfspPEQHOWvpRIajmMDS9l+rrJVz1jNU354Wr0/wzmlTMSPmWfsaxBXCRn1LgGZ9uwTvLwhjtDMD5qX+O0hsUFgvcI8AvoMbC3173wJXSIFGgVkKGBR+yOK4s0YvSQkCpYe8HhN4BwODkzJ64FZ9OMcvoVcy2jNntAbWKWmrwJJVlVBJopYgLUCdkpomrQxS2St1SgIqoJQElNuoWau8iyLa9Kdp9ExaKC2m4/+jXYa3be2UI5Ha6fDV3VS+/tHmo3Q52nyU2x9tPoqRdR6ln86kOLSbLhfaq6OkcHWVbL45lsNWiWn9n8XwOcARStpE5snxY4ts0thO4gVMn1EpNH+KCQVU8xbjpap6i/HLZ8tbTEmM6m7enBiax9hsvrz3itdY/us/5LpXjRofZzom4ivrBCYmIvY8/IqHX+Phax+ZUxiibB9HyZP0GNlpb/bNTxJOXn5bJY1vEqWUVrSaOjl/nbc3cvRCkBLQNPfI0RaSD6dBCMEmRbuRc3HrgRtwQY+pAzAihkfBUC5q8JhYe/hyDGKw8+AxdB7ikvUYPZNHl8XwDTwUj0drD86DedjzYB5DnYcwQUI14C7ijbSWFRjp07sWJn/bSKlioi/4MDriIo0++ig6yZQYDZI1gxPwWxMS0BSETD76KCSN2j1OJtR9BSHmwwkJizTD00bRHTUlhjWh3isIMR9OSFikGZ42St/kYSJU3bfWxX3LXJH5UuT0FmsL6rVXgCvmIcBr9+CMTZuuephU1ccwVjIlhn3tYzF0Z0v1YDG0HsKS9RhVeZU8hCXrMRoKcpEdFmnBopJDli96a2wlLCr3MCUSX9J6y/iS1lvGYyhy6jaAx1DkrDzaL3GVuhpxJycXTu5hUwFmSbCKIb2lFn9N2QkVwbjf/FAbLxtMFq3H9WX+P6WbN+dfAclBhlR2GgAA"
                       className="w-full h-full border-0"
                       title="TSCircuit Editor"
                       sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-                    />
+                    /> */}
                   </div>
                 )}
               </ResizablePanel>

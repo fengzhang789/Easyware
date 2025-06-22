@@ -1,11 +1,7 @@
-require('dotenv').config();
-const express = require('express')
-const cors = require('cors')
-const json5 = require('json5')
-const assert = require('assert')
-const fs = require('fs');
-const path = require('path');
-const { getCollection } = require('../utils/mongodb');
+import 'dotenv/config';
+import express from 'express';
+import assert from 'assert';
+import { getCollection } from '../utils/mongodb.js';
 
 const router = express.Router()
 
@@ -18,7 +14,7 @@ const HTTP_STATUS = {
 
 const COMPONENT_COLLECTION = 'components'
 
-COMPONENT_PROMPT = `
+const COMPONENT_PROMPT = `
  ou are a hardware circuit designer in charge of prototyping 
  circuit designs for builders trying to prototype basic 
  hardware such as arduinos, etc. Generate a list of 
@@ -83,6 +79,15 @@ router.post('/components', async function (req, res) {
       message: 'Please add PERPLEXITY_API_KEY to your .env file'
     });
   }
+
+  console.log(req.body)
+
+  if (!req.body.message) {
+    return res.status(400).json({
+      error: 'Message is required',
+      message: 'Please add a message to your request'
+    });
+  }
   
   try {
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
@@ -101,7 +106,7 @@ router.post('/components', async function (req, res) {
           },
           {
             "role": "user",
-            "content": "Build a temperature and humidity sensor"
+            "content": req.body.message
           }
         ]
       })
@@ -118,20 +123,20 @@ router.post('/components', async function (req, res) {
 
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({
-      response_id: data.id,
+      id: data.id,
       status_code: HTTP_STATUS.OK,
       message: "Component list saved successfully"
     }, null, 2));
   } catch (error) {
+    console.error('Error in /components POST:', error);
     res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-      response_id: data.id,
       status_code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
       message: error.message
     });
   }
 });
 
-module.exports = {
+export {
   router,
   HTTP_STATUS
 };

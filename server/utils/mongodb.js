@@ -1,5 +1,6 @@
-require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+import 'dotenv/config';
+import { MongoClient, ServerApiVersion } from 'mongodb';
+
 const uri = process.env.MONGODB_URI;
 
 if (!uri) {
@@ -49,7 +50,7 @@ function getCollection(collectionName) {
   return db.collection(collectionName);
 }
 
-module.exports = {
+export {
   client,
   connectToMongoDB,
   getDatabase,

@@ -1,10 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { Button } from "./ui/button"
+import { Input } from "./ui/input"
+import { ScrollArea } from "./ui/scroll-area"
 import { Send, MessageCircle, Zap, Code, Package, Copy } from "lucide-react"
+import { BACKEND_URL } from "../constants"
 
 interface Message {
   id: string
@@ -31,96 +32,11 @@ const CIRCUIT_SUGGESTIONS = [
   "Create a buzzer alarm circuit",
 ]
 
-const FIRMWARE_TEMPLATES: Record<string, string> = {
-  led_blink: `// LED Blink Circuit Firmware
-#include <Arduino.h>
-
-#define LED_PIN 13
-
-void setup() {
-  Serial.begin(9600);
-  pinMode(LED_PIN, OUTPUT);
-  Serial.println("LED Blink Circuit Ready");
-}
-
-void loop() {
-  digitalWrite(LED_PIN, HIGH);
-  Serial.println("LED ON");
-  delay(1000);
-  
-  digitalWrite(LED_PIN, LOW);
-  Serial.println("LED OFF");
-  delay(1000);
-}`,
-
-  temperature_sensor: `// Temperature Sensor Circuit Firmware
-#include <Arduino.h>
-
-#define TEMP_PIN A0
-#define LED_PIN 13
-
-void setup() {
-  Serial.begin(9600);
-  pinMode(LED_PIN, OUTPUT);
-  Serial.println("Temperature Sensor Ready");
-}
-
-void loop() {
-  int sensorValue = analogRead(TEMP_PIN);
-  float voltage = sensorValue * (5.0 / 1023.0);
-  float temperature = (voltage - 0.5) * 100;
-  
-  Serial.print("Temperature: ");
-  Serial.print(temperature);
-  Serial.println("°C");
-  
-  if (temperature > 25) {
-    digitalWrite(LED_PIN, HIGH);
-  } else {
-    digitalWrite(LED_PIN, LOW);
-  }
-  
-  delay(1000);
-}`,
-}
-
 export function ChatPanel() {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
   const [hasUserInteracted, setHasUserInteracted] = useState(false)
-
-  const generateCircuitResponse = (userMessage: string): CircuitResponse => {
-    const lowerMessage = userMessage.toLowerCase()
-
-    if (lowerMessage.includes("led") || lowerMessage.includes("blink")) {
-      return {
-        content:
-          "I'll create a simple LED blink circuit for you! This circuit includes:\n\n• Arduino Uno microcontroller\n• LED with current-limiting resistor\n• Breadboard connections\n\nThe circuit is now loading in the editor. Would you like me to generate the corresponding firmware code?",
-        type: "circuit",
-        firmware: "led_blink",
-      }
-    } else if (lowerMessage.includes("temperature") || lowerMessage.includes("sensor")) {
-      return {
-        content:
-          "Creating a temperature sensor circuit! This design features:\n\n• Arduino Uno microcontroller\n• LM35 temperature sensor\n• Status LED indicator\n• Analog input configuration\n\nThe circuit is being generated. Should I also create the firmware to read temperature values?",
-        type: "circuit",
-        firmware: "temperature_sensor",
-      }
-    } else if (lowerMessage.includes("motor")) {
-      return {
-        content:
-          "Designing a motor control circuit with:\n\n• Arduino Uno microcontroller\n• L298N motor driver\n• DC motor\n• Control buttons\n• Power supply connections\n\nCircuit is being assembled in the editor. Ready for firmware generation?",
-        type: "circuit",
-      }
-    } else {
-      return {
-        content:
-          "I can help you design various circuits! Here are some popular options:\n\n• LED blink circuits\n• Temperature sensor circuits\n• Motor control circuits\n• Voltage divider circuits\n\nWhat type of circuit interests you?",
-        type: "general",
-      }
-    }
-  }
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isGenerating) return
@@ -138,32 +54,82 @@ export function ChatPanel() {
     setInputValue("")
     setIsGenerating(true)
 
-    setTimeout(() => {
-      const response = generateCircuitResponse(inputValue)
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: response.content,
+    try {
+      const componentsResponse = fetch(`${BACKEND_URL}/perplexity/components`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: inputValue,
+        }),
+      })
+      const reactComponentsResponse = fetch(`${BACKEND_URL}/claude/diagrams`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: inputValue,
+        }),
+      })
+
+      const [componentsData, reactComponentsData] = await Promise.all([componentsResponse, reactComponentsResponse])
+
+      let cleaned = reactComponentsData.data.replace(/^```[a-zA-Z]*\n/, '').replace(/```$/, '');
+      cleaned = cleaned.replace(/\\n/g, '\n');
+
+      console.log(cleaned)
+
+
+      console.log(JSON.stringify(JSON.parse(JSON.stringify(componentsData, null, 2)), null, 2))
+      console.log(JSON.stringify(JSON.parse(JSON.stringify(reactComponentsData, null, 2)), null, 2))
+
+      // Handle components response
+      if (componentsData.ok) {
+        const componentsResult = await componentsData.json()
+        console.log('Components response:', componentsResult)
+        
+        // Add assistant message for components
+        const assistantMessage: Message = {
+          id: Date.now().toString() + '-components',
+          content: `Component list generated successfully. Response ID: ${componentsResult.id}`,
+          sender: "assistant",
+          timestamp: new Date(),
+          type: "bom"
+        }
+        setMessages((prev) => [...prev, assistantMessage])
+      }
+
+      // Handle diagrams response
+      if (reactComponentsData.ok) {
+        const diagramsResult = await reactComponentsData.json()
+        console.log('Diagrams response:', diagramsResult)
+        
+        // Add assistant message for diagrams
+        const assistantMessage: Message = {
+          id: Date.now().toString() + '-diagrams',
+          content: diagramsResult.data || 'Circuit diagram generated successfully.',
+          sender: "assistant",
+          timestamp: new Date(),
+          type: "circuit"
+        }
+        setMessages((prev) => [...prev, assistantMessage])
+      }
+    } catch (error) {
+      console.error('Error making API requests:', error)
+      
+      // Add error message to chat
+      const errorMessage: Message = {
+        id: Date.now().toString() + '-error',
+        content: 'Sorry, there was an error processing your request. Please try again.',
         sender: "assistant",
         timestamp: new Date(),
-        type: response.type,
       }
+      setMessages((prev) => [...prev, errorMessage])
+    }
 
-      setMessages((prev) => [...prev, assistantMessage])
-      setIsGenerating(false)
-
-      if (response.firmware) {
-        setTimeout(() => {
-          const firmwareMessage: Message = {
-            id: (Date.now() + 2).toString(),
-            content: `Here's the Arduino firmware code for your circuit:\n\n\`\`\`cpp\n${FIRMWARE_TEMPLATES[response.firmware]}\n\`\`\`\n\nThis code will be automatically loaded into the Arduino IDE. You can export it as a .ino file!`,
-            sender: "assistant",
-            timestamp: new Date(),
-            type: "firmware",
-          }
-          setMessages((prev) => [...prev, firmwareMessage])
-        }, 2000)
-      }
-    }, 1500)
+    setIsGenerating(false)
   }
 
   const handleSuggestionClick = (suggestion: string) => {

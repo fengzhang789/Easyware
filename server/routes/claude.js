@@ -1,12 +1,14 @@
-require('dotenv').config();
-const express = require('express')
-const cors = require('cors')
-const fs = require('fs');
-const path = require('path');
-const Anthropic = require('@anthropic-ai/sdk');
-const { HTTP_STATUS } = require('./perplexity');
+import 'dotenv/config';
+import express from 'express';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import Anthropic from '@anthropic-ai/sdk';
+import { HTTP_STATUS } from './perplexity.js';
 
 const router = express.Router()
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const systemPrompt = fs.readFileSync(path.join(__dirname, '../utils/prompt.txt'), 'utf8');
 
 router.post('/diagrams', async function (req, res) {
@@ -61,4 +63,4 @@ router.post('/diagrams', async function (req, res) {
     }
 });
 
-module.exports = router;
+export default router;

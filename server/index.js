@@ -1,12 +1,12 @@
-require('dotenv').config();
-const express = require('express')
-const app = express()
-const PORT = process.env.PORT || 3001;
-const cors = require('cors')
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import { router as perplexityRouter } from './routes/perplexity.js';
+import claudeRouter from './routes/claude.js';
+import { connectToMongoDB, closeConnection } from './utils/mongodb.js';
 
-const { router: perplexityRouter } = require('./routes/perplexity');
-const claudeRouter = require('./routes/claude');
-const { connectToMongoDB, closeConnection } = require('./utils/mongodb');
+const app = express();
+const PORT = process.env.PORT || 3001;
 
 app.use(cors())
 app.use(express.json())

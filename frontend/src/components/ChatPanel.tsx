@@ -284,7 +284,7 @@ export function ChatPanel({
                     <span className="text-xs font-medium capitalize font-crimson">{message.type}</span>
                   </div>
                 )}
-                <div className="text-sm whitespace-pre-wrap font-crimson">{renderMessageContent(message.content)}</div>
+                <div className="text-sm whitespace-pre-wrap font-crimson break-words">{renderMessageContent(message.content)}</div>
                 <span className="text-xs opacity-70 mt-2 block font-crimson-italic">{message.timestamp.toLocaleTimeString()}</span>
               </div>
             </div>

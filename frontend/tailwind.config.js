@@ -20,6 +20,7 @@ module.exports = {
       fontFamily: {
         "crimson": ["CrimsonText", "Times New Roman", "serif"],
         "crimson-italic": ["CrimsonText-Italic", "Times New Roman", "serif"],
+        "cormorant-garamond-italic": ["CormorantGaramond-Italic", "Times New Roman", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",

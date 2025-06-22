@@ -18,7 +18,10 @@ export default function Component() {
 
         <div className="flex-1 flex flex-col px-[1rem] justify-center items-center">
           <div className="text-center z-10">
-            <h1 className="text-[#ffffff] !text-[2rem] md:!text-[2rem] font-crimson-italic mb-6 !leading-[1.1] animate-fade-in-up">
+            <h1 className="text-[#ffffff] !text-[4.5rem] md:!text-[4.5rem] font-cormorant-garamond-italic animate-fade-in-up italic mb-2">
+              Easyware
+            </h1>
+            <h1 className="text-[#ffffff] !text-[2rem] md:!text-[2rem] font-crimson-italic animate-fade-in-up">
               What do you want to build today?
             </h1>
             <div className="relative w-full max-w-xl mx-auto animate-fade-in-scale animate-delay-500">

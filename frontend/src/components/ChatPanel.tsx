@@ -86,7 +86,7 @@ export function ChatPanel({
           message: messageToSend,
         }),
       })
-      const reactComponentsResponse = fetch(`${BACKEND_URL}/claude/diagrams`, {
+      const reactComponentsResponse = fetch(`${BACKEND_URL}/letta/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +112,8 @@ export function ChatPanel({
         console.log('Raw diagrams data type:', typeof diagramsResult.data)
         console.log('Raw diagrams data length:', diagramsResult.data.length)
         
-        const cleaned = cleanCircuitString(diagramsResult.data)
+        const data = diagramsResult.data
+        const cleaned = cleanCircuitString(data.messages[data.messages.length - 1].content)
         console.log('Cleaned circuit:', cleaned)
         console.log('Cleaned circuit type:', typeof cleaned)
         console.log('Cleaned circuit length:', cleaned.length)
@@ -143,10 +144,24 @@ export function ChatPanel({
       if (reactComponentsData.ok) {
         console.log('Diagrams response:', diagramsResult)
         
+        // Extract the actual content from the Letta response
+        let contentText = 'Circuit diagram generated successfully.'
+        
+        if (diagramsResult.data && diagramsResult.data.messages) {
+          // Find the assistant message with the circuit content
+          const assistantMessage = diagramsResult.data.messages.find(
+            (msg: { messageType: string; content?: string }) => msg.messageType === "assistant_message"
+          )
+          
+          if (assistantMessage && assistantMessage.content) {
+            contentText = assistantMessage.content
+          }
+        }
+        
         // Add assistant message for diagrams
         const assistantMessage: Message = {
           id: Date.now().toString() + '-diagrams',
-          content: diagramsResult.data || 'Circuit diagram generated successfully.',
+          content: contentText,
           sender: "assistant",
           timestamp: new Date(),
           type: "circuit"

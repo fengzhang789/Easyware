@@ -782,6 +782,8 @@ export default () => (
 
 You can use strings to specify common footprints. Here are a few examples:
 
+NOTE FOR <chip>: IF THE NUMBER OF PINLABELS IS 16, THEN SET THE FOOTPRINT PROPERTY TO `dip16_wide`. OTHERWISE, IF THE NUMBER OF PINLABELS IS 8, SET THE FOOTPRINT PROPERTY TO `dip8`.
+
 - **SMD Resistors/Capacitors:** `0402`, `0603`, `0805`, `1206`
 - **ICs:**
   - `dip8`, `dip16_wide`

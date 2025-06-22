@@ -3,7 +3,7 @@ const cleanCircuitString = (input: string) => {
   cleaned = cleaned.replace(/\\n/g, "\n");
   cleaned = cleaned.replace(/^export default\s*\(\)\s*=>\s*\(\s*\n?/, "");
   cleaned = cleaned.replace(/\n?\s*\)\s*$/, "");
-
+  
   return cleaned;
 };
 

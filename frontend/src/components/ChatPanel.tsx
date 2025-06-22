@@ -1,9 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-import { ScrollArea } from "./ui/scroll-area"
 import { Send, MessageCircle, Zap, Code, Package, Copy } from "lucide-react"
 import { BACKEND_URL } from "../constants"
 import cleanCircuitString from "../utils/circuit"
@@ -29,15 +28,25 @@ const CIRCUIT_SUGGESTIONS = [
 
 export function ChatPanel({
   setCircuit,
+  setComponentsData,
   initialPrompt,
 }: {
   setCircuit: (circuit: string) => void
+  setComponentsData: (data: Record<string, unknown>) => void
   initialPrompt?: string | null
 }) {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
   const [hasUserInteracted, setHasUserInteracted] = useState(false)
+  const scrollAreaRef = useRef<HTMLDivElement>(null)
+
+  // Auto-scroll to bottom when new messages are added
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
+    }
+  }, [messages, isGenerating])
 
   // Auto-send initial prompt if provided
   useEffect(() => {
@@ -111,12 +120,15 @@ export function ChatPanel({
         console.log('Cleaned circuit length:', cleaned.length)
         
         setCircuit(cleaned)
+        setComponentsData(componentsResult)
+        console.log(componentsResult)
       } else {
         console.error('Diagrams request failed or no data:', reactComponentsData.status, diagramsResult)
       }
 
       console.log(JSON.stringify(JSON.parse(JSON.stringify(componentsResult, null, 2)), null, 2))
       console.log(JSON.stringify(JSON.parse(JSON.stringify(diagramsResult, null, 2)), null, 2))
+      console.log(JSON.stringify(JSON.parse(JSON.stringify(componentsData, null, 2)), null, 2))
 
       // Handle components response
       if (componentsData.ok) {
@@ -130,6 +142,7 @@ export function ChatPanel({
           type: "bom"
         }
         setMessages((prev) => [...prev, assistantMessage])
+        
       }
 
       // Handle diagrams response
@@ -238,15 +251,15 @@ export function ChatPanel({
   }
 
   return (
-    <div className="h-full bg-cream border-r border-charcoal/20">
+    <div className="flex flex-col h-full bg-cream border-r border-charcoal/20">
       <div className="p-4 border-b border-charcoal/20 flex-shrink-0">
         <div className="flex items-center gap-2">
-          <h2 className="font-cormorant text-xl font-semibold text-charcoal">Assistant</h2>
+          <h2 className="text-xl font-semibold text-charcoal font-crimson-italic">Assistant</h2>
         </div>
-        <p className="text-sm text-charcoal/70 mt-1">Design circuits, generate firmware, create BOMs</p>
+        <p className="text-sm text-charcoal/70 mt-1 font-crimson">Design circuits, generate firmware, create BOMs</p>
       </div>
 
-      <div className="overflow-y-auto p-4 h-[calc(100vh-225px)]">
+      <div ref={scrollAreaRef} className="flex-1 overflow-y-auto p-4 min-h-0">
         <div className="space-y-4">
           {messages.length === 0 && !hasUserInteracted && (
             <div className="text-center text-charcoal/50 py-8">
@@ -260,18 +273,18 @@ export function ChatPanel({
               <div
                 className={`max-w-[85%] p-3 rounded-lg ${
                   message.sender === "user"
-                    ? "bg-charcoal text-cream"
+                    ? "bg-accent text-charcoal border border-charcoal/20"
                     : "bg-white text-charcoal border border-charcoal/20"
                 }`}
               >
                 {message.sender === "assistant" && message.type && (
                   <div className="flex items-center gap-2 mb-2">
                     {getMessageIcon(message.type)}
-                    <span className="text-xs font-medium capitalize">{message.type}</span>
+                    <span className="text-xs font-medium capitalize font-crimson">{message.type}</span>
                   </div>
                 )}
-                <div className="text-sm whitespace-pre-wrap">{renderMessageContent(message.content)}</div>
-                <span className="text-xs opacity-70 mt-2 block">{message.timestamp.toLocaleTimeString()}</span>
+                <div className="text-sm whitespace-pre-wrap font-crimson break-words">{renderMessageContent(message.content)}</div>
+                <span className="text-xs opacity-70 mt-2 block font-crimson-italic">{message.timestamp.toLocaleTimeString()}</span>
               </div>
             </div>
           ))}
@@ -291,12 +304,10 @@ export function ChatPanel({
           )}
         </div>
       </div>
-
-      {/* Horizontal Scrollable Suggestions */}
       {!hasUserInteracted && (
-        <div className="px-4 pb-2">
-          <ScrollArea className="w-full">
-            <div className="flex gap-2 pb-2 min-w-max">
+        <div className="px-4 pb-2 flex-shrink-0">
+          <div className="w-full overflow-hidden">
+            <div className="flex gap-2 pb-2 flex-wrap">
               {CIRCUIT_SUGGESTIONS.map((suggestion, index) => (
                 <button
                   key={index}
@@ -307,7 +318,7 @@ export function ChatPanel({
                 </button>
               ))}
             </div>
-          </ScrollArea>
+          </div>
         </div>
       )}
 
@@ -317,14 +328,14 @@ export function ChatPanel({
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Describe the circuit you want to build..."
-            className="flex-1 bg-white border-charcoal/20"
+            className="flex-1 bg-white border-charcoal/20 font-crimson-italic"
             onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
             disabled={isGenerating}
           />
           <Button
             onClick={() => handleSendMessage()}
             size="icon"
-            className="bg-charcoal hover:bg-charcoal/80 text-cream"
+            className="bg-charcoal hover:bg-charcoal/80 text-cream hover:bg-accent hover:cursor-pointer active:bg-gray-200"
             disabled={isGenerating}
           >
             <Send className="w-4 h-4" />

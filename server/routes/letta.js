@@ -170,4 +170,73 @@ router.post('/stream', async function (req, res) {
     }
 });
 
+router.post('code', async function (req, res) {
+    const { message, agentId = "agent-08e0c1e8-ea7b-44ac-8e36-f32905b8349a" } = req.body;
+
+    if (!process.env.LETTA_API_KEY) {
+        return res.status(401).json({ 
+            error: 'Letta API key not found',
+            message: 'Please add LETTA_API_KEY to your .env file'
+        });
+    }
+
+    if (!message) {
+        return res.status(400).json({ 
+            error: 'Message is required',
+            message: 'Please provide a message in the request body'
+        });
+    }
+
+    try {
+        console.log('📋 Retrieving agent...');
+        const agentState = await client.agents.retrieve(agentId);
+        console.log('✅ Agent retrieved successfully:', agentState.id);
+
+        console.log('💬 Sending code message...');
+        const response = await client.agents.messages.create(
+            agentState.id, {
+                messages: [
+                    {
+                        role: "user",
+                        content: message
+                    }
+                ]
+            }
+        );
+
+        console.log('✅ Response received for code');
+
+        // Save response to file (optional)
+        const lettaDir = path.join(__dirname, '../letta');
+        if (!fs.existsSync(lettaDir)) {
+            fs.mkdirSync(lettaDir, { recursive: true });
+        }
+        fs.writeFileSync(
+            path.join(lettaDir, 'response.json'), 
+            JSON.stringify(response, null, 2)
+        );
+
+        return res.json({
+            success: true,
+            data: response,
+            agentId: agentState.id
+        });
+
+    } catch (error) {
+        console.error('❌ Error:', error.message);
+        
+        if (error.statusCode === 401) {
+            return res.status(401).json({
+                error: 'Authentication failed',
+                message: 'Please check your API key and permissions'
+            });
+        }
+
+        return res.status(500).json({ 
+            error: 'Internal server error',
+            message: error.message 
+        });
+    }
+})
+
 export default router;

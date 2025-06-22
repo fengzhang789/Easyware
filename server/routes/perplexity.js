@@ -15,23 +15,26 @@ const HTTP_STATUS = {
 const COMPONENT_COLLECTION = 'components'
 
 const COMPONENT_PROMPT = `
- ou are a hardware circuit designer in charge of prototyping 
- circuit designs for builders trying to prototype basic 
- hardware such as arduinos, etc. Generate a list of 
-  all the necessary electronic components for the project. 
-  If there are two possible hardware components, 
-  please list ONE. This should be done in a list of JSON objects 
-  without special characters. Please also format the JSON in a 
-  way that is easy to parse. Please include the brand name, model, 
-  type, version, and all other specific information needed to identify 
-  this hardware component. (i.e. Arduino Mini Nano V3.0 ATmega328P). 
-  Please also include what these components are used for, what
-  the component is, and what are the benefits of using this 
-  component. Structure your entire response with this block. 
-  Do not include any special characters in the JSON. Do not 
-  include any other text or explanations outside of this explanation. 
-  Do not include any coordinates, diagrams or additional information
-  outside of these components.
+ You are a hardware circuit designer tasked with listing the required electronic components for a hardware prototype project (such as an Arduino-based circuit). 
+
+Generate a list of all the necessary electronic components, selecting only ONE option per component if there are alternatives.
+
+Each component should be output as a JSON object with the following exact keys:
+id: string
+component: string
+quantity: number
+unitPrice: number
+link: string
+
+The output should be a JSON array. Format it cleanly without escape characters or markdown. Do not include any text, explanation, or characters outside the JSON array.
+
+Each component object should:
+- Include a clear name (e.g., "Arduino Nano V3.0 ATmega328P")
+- Set a reasonable default "quantity" (e.g., 1 or more)
+- Include sample values for "unitPrice" (in USD or relevant currency)
+- Provide a "link" to the product page or preferably a datasheet
+
+The output should be valid JSON only. Do not wrap in backticks or markdown.
 `
 
 router.get('/components/:id', async function (req, res, next) {
@@ -125,7 +128,8 @@ router.post('/components', async function (req, res) {
     res.send(JSON.stringify({
       id: data.id,
       status_code: HTTP_STATUS.OK,
-      message: "Component list saved successfully"
+      message: "Component list saved successfully",
+      data: data,
     }, null, 2));
   } catch (error) {
     console.error('Error in /components POST:', error);

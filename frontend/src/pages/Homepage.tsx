@@ -1,11 +1,27 @@
 "use client"
 
+import { useState } from "react"
 import { Button } from "../components/ui/button"
-import { Send, Sparkles } from "lucide-react"
+import { Send } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
 export default function Homepage() {
   const navigate = useNavigate()
+  const [inputValue, setInputValue] = useState("")
+  
+  const handleSend = () => {
+    if (inputValue.trim()) {
+      // Navigate to chat with the prompt as a URL parameter
+      navigate(`/chat?prompt=${encodeURIComponent(inputValue.trim())}`)
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault()
+      handleSend()
+    }
+  }
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1a1a1a] via-[#2a2a2a] to-[#1a1a1a] relative overflow-hidden">
@@ -57,9 +73,12 @@ export default function Homepage() {
           <div className="relative w-full max-w-2xl mx-auto group">
             <div className="flex items-center bg-[#F5F1ED]/10 backdrop-blur-md border border-[#F5F1ED]/30 rounded-3xl px-8 py-6 focus-within:ring-2 focus-within:ring-[#F5F1ED]/20 focus-within:border-[#F5F1ED]/50 focus-within:shadow-lg focus-within:shadow-[#F5F1ED]/10 transition-all duration-300 hover:shadow-md hover:shadow-[#F5F1ED]/5">
               <textarea
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Help me build a bluetooth doorknob..."
                 className="flex-1 bg-transparent text-[#F5F1ED] placeholder:text-[#F5F1ED]/60 font-light text-lg resize-none outline-none border-none focus:ring-0"
                 rows={1}
+                onKeyPress={handleKeyPress}
                 onInput={(e) => {
                   const target = e.target as HTMLTextAreaElement;
                   target.style.height = 'auto';
@@ -69,8 +88,9 @@ export default function Homepage() {
               />
               <Button
                 size="icon"
-                onClick={() => navigate('/chat')}
-                className="bg-[#F5F1ED] hover:bg-[#F5F1ED]/90 text-[#272727] rounded-full w-14 h-14 flex-shrink-0 ml-6 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#F5F1ED]/20"
+                onClick={handleSend}
+                disabled={!inputValue.trim()}
+                className="bg-[#F5F1ED] hover:bg-[#F5F1ED]/90 text-[#272727] rounded-full w-14 h-14 flex-shrink-0 ml-6 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#F5F1ED]/20 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="w-6 h-6" />
               </Button>

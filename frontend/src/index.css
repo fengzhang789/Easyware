@@ -17,12 +17,53 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "CormorantGaramond-Italic";
+  src: url("/fonts/CormorantGaramond-Italic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CormorantGaramond-Regular";
+  src: url("/fonts/CormorantGaramond-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 .font-crimson {
   font-family: "CrimsonText", "Times New Roman", serif !important;
 }
 
 .font-crimson-italic {
   font-family: "CrimsonText-Italic", "Times New Roman", serif !important;
+}
+
+.font-cormorant-italic {
+  font-family: "CormorantGaramond-Italic", "Times New Roman", serif !important;
+}
+
+.font-cormorant-regular {
+  font-family: "CormorantGaramond-Regular", "Times New Roman", serif !important;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+  opacity: 0;
 }
 
 /* Remove default margins and borders */

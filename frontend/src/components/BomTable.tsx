@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Package, Plus, Trash2, Download, ExternalLink } from "lucide-react"
 
@@ -101,68 +101,72 @@ export function BOMTable() {
 
       <ScrollArea className="flex-1">
         <div className="p-4">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="font-cormorant font-semibold">Component</TableHead>
-                <TableHead className="font-cormorant font-semibold">Description</TableHead>
-                <TableHead className="font-cormorant font-semibold">Qty</TableHead>
-                <TableHead className="font-cormorant font-semibold">Unit Price</TableHead>
-                <TableHead className="font-cormorant font-semibold">Total</TableHead>
-                <TableHead className="font-cormorant font-semibold">Supplier</TableHead>
-                <TableHead className="font-cormorant font-semibold">Links</TableHead>
-                <TableHead className="w-12"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {bomItems.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="font-medium">{item.component}</TableCell>
-                  <TableCell className="text-sm text-charcoal/70">{item.description}</TableCell>
-                  <TableCell>{item.quantity}</TableCell>
-                  <TableCell>${item.unitPrice.toFixed(2)}</TableCell>
-                  <TableCell className="font-medium">${(item.quantity * item.unitPrice).toFixed(2)}</TableCell>
-                  <TableCell className="text-sm">{item.supplier}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-1">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => openLink(item.supplierLink)}
-                        className="p-1 h-6 w-6 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                        title="View on supplier website"
-                      >
-                        <ExternalLink className="w-3 h-3" />
-                      </Button>
-                      {item.datasheet && (
+          <div className="overflow-x-auto">
+            <div className="w-full">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="font-cormorant font-semibold">Component</TableHead>
+                    <TableHead className="font-cormorant font-semibold">Description</TableHead>
+                    <TableHead className="font-cormorant font-semibold">Qty</TableHead>
+                    <TableHead className="font-cormorant font-semibold">Unit Price</TableHead>
+                    <TableHead className="font-cormorant font-semibold">Total</TableHead>
+                    <TableHead className="font-cormorant font-semibold">Supplier</TableHead>
+                    <TableHead className="font-cormorant font-semibold">Links</TableHead>
+                    <TableHead className="w-12"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {bomItems.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell className="font-medium">{item.component}</TableCell>
+                      <TableCell className="text-sm text-charcoal/70">{item.description}</TableCell>
+                      <TableCell>{item.quantity}</TableCell>
+                      <TableCell>${item.unitPrice.toFixed(2)}</TableCell>
+                      <TableCell className="font-medium">${(item.quantity * item.unitPrice).toFixed(2)}</TableCell>
+                      <TableCell className="text-sm">{item.supplier}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => openLink(item.supplierLink)}
+                            className="p-1 h-6 w-6 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            title="View on supplier website"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                          </Button>
+                          {item.datasheet && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => item.datasheet && openLink(item.datasheet)}
+                              className="p-1 h-6 w-6 text-green-600 hover:text-green-700 hover:bg-green-50"
+                              title="View datasheet"
+                            >
+                              📄
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => openLink(item.datasheet)}
-                          className="p-1 h-6 w-6 text-green-600 hover:text-green-700 hover:bg-green-50"
-                          title="View datasheet"
+                          onClick={() => handleDeleteItem(item.id)}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
                         >
-                          📄
+                          <Trash2 className="w-4 h-4" />
                         </Button>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleDeleteItem(item.id)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
 
-          <div className="mt-4 p-4 bg-white rounded-lg border border-charcoal/20">
+          <div className="mt-4 p-4 bg-white rounded-lg border border-charcoal/20 overflow-x-auto">
             <div className="flex justify-between items-center">
               <span className="font-cormorant text-lg font-semibold">Total Cost:</span>
               <span className="font-cormorant text-xl font-bold text-charcoal">${totalCost.toFixed(2)}</span>
@@ -173,6 +177,8 @@ export function BOMTable() {
             </div>
           </div>
         </div>
+        <ScrollBar orientation="horizontal" />
+        <ScrollBar orientation="vertical" />
       </ScrollArea>
     </div>
   )

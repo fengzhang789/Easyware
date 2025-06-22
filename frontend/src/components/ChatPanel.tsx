@@ -238,15 +238,15 @@ export function ChatPanel({
   }
 
   return (
-    <div className="flex flex-col h-full bg-cream border-r border-charcoal/20">
-      <div className="p-4 border-b border-charcoal/20">
+    <div className="h-full bg-cream border-r border-charcoal/20">
+      <div className="p-4 border-b border-charcoal/20 flex-shrink-0">
         <div className="flex items-center gap-2">
           <h2 className="font-cormorant text-xl font-semibold text-charcoal">Assistant</h2>
         </div>
         <p className="text-sm text-charcoal/70 mt-1">Design circuits, generate firmware, create BOMs</p>
       </div>
 
-      <ScrollArea className="flex-1 p-4">
+      <div className="overflow-y-auto p-4 h-[calc(100vh-225px)]">
         <div className="space-y-4">
           {messages.length === 0 && !hasUserInteracted && (
             <div className="text-center text-charcoal/50 py-8">
@@ -278,15 +278,19 @@ export function ChatPanel({
           {isGenerating && (
             <div className="flex justify-start">
               <div className="bg-white text-charcoal border border-charcoal/20 p-3 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <div className="animate-spin w-4 h-4 border-2 border-charcoal/20 border-t-charcoal rounded-full"></div>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center space-x-1">
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-charcoal [animation-delay:-0.3s]"></div>
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-charcoal [animation-delay:-0.15s]"></div>
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-charcoal"></div>
+                  </div>
                   <span className="text-sm">Generating circuit design...</span>
                 </div>
               </div>
             </div>
           )}
         </div>
-      </ScrollArea>
+      </div>
 
       {/* Horizontal Scrollable Suggestions */}
       {!hasUserInteracted && (
@@ -307,7 +311,7 @@ export function ChatPanel({
         </div>
       )}
 
-      <div className="p-4 border-t border-charcoal/20">
+      <div className="p-4 border-t border-charcoal/20 flex-shrink-0">
         <div className="flex gap-2">
           <Input
             value={inputValue}
